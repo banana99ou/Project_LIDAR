@@ -10,6 +10,7 @@ dirYPin = 19  # Y.DIR
 enPin = 13
 stepPin = stepYPin
 dirPin = dirYPin
+homingPin = 4 # placeholderplaceholderplaceholderplaceholderplaceholderplaceholderplaceholderplaceholder
 stepsPerRev = 200
 pulseWidthMicros = 100  # microseconds 0.0001 second
 millisBtwnSteps = 1000  # 0.001 second
@@ -26,6 +27,32 @@ H = 600
 SCAN_BYTE = b'\x20'
 SCAN_TYPE = 129
 
+def StepmotorStep(resolution="fine"):
+    if(resolution == "fine"):
+      resolution = 1 # step == 1.8 degree
+    if(resolution == "coarse"):
+       resolution = 3 # == 5.4 degree
+    GPIO.output(dirPin, GPIO.LOW)
+    for i in range(resolution):
+      GPIO.output(stepPin, GPIO.HIGH)
+      time.sleep(pulseWidthMicros / 1000000.0)
+      GPIO.output(stepPin, GPIO.LOW)
+      time.sleep(millisBtwnSteps / 100000.0)
+def homing():
+  while True:
+    if(GPIO.input(homingPin) == 1):
+      for i in range(90/1.8):
+        GPIO.output(stepPin, GPIO.HIGH)
+        time.sleep(pulseWidthMicros / 1000000.0)
+        GPIO.output(stepPin, GPIO.LOW)
+        time.sleep(millisBtwnSteps / 100000.0)
+      break
+    else:
+      GPIO.output(dirPin, GPIO.LOW)
+      GPIO.output(stepPin, GPIO.HIGH)
+      time.sleep(pulseWidthMicros / 1000000.0)
+      GPIO.output(stepPin, GPIO.LOW)
+      time.sleep(millisBtwnSteps / 100000.0)
 
 # Setup pygame
 pygame.display.init()
@@ -70,7 +97,7 @@ try:
     for scan in lidar.iter_scans():
         for (_, angle, distance) in scan:
             scan_data[min([359, floor(angle)])] = distance
-            StepmotorStep(course)
+            StepmotorStep("coarse")
         process_data(scan_data)
 
 except KeyboardInterrupt:
@@ -79,25 +106,7 @@ except KeyboardInterrupt:
     lidar.stop_motor()
     lidar.disconnect()
 
-def StepmotorStep(resolution=fine)
-    if(resolution == fine)
-      resolution = 1
-    GPIO.output(dirPin, GPIO.HIGH)
-    for i in range(resolution):
-      GPIO.output(stepPin, GPIO.HIGH)
-      time.sleep(pulseWidthMicros / 1000000.0)
-      GPIO.output(stepPin, GPIO.LOW)
-      time.sleep(millisBtwnSteps / 100000.0)
-def homing()
-  while True:
-    if(GPIO.input(homingPin) == 1):
-      break
-    else
-      GPIO.output(dirPin, GPIO.LOW)
-      GPIO.output(stepPin, GPIO.HIGH)
-      time.sleep(pulseWidthMicros / 1000000.0)
-      GPIO.output(stepPin, GPIO.LOW)
-      time.sleep(millisBtwnSteps / 100000.0)
+
       
 # issues:
 # .stop() sends stop byte to lidar so chekc what stop byte should be in doc
