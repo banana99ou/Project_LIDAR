@@ -28,10 +28,12 @@ SCAN_BYTE = b'\x20'
 SCAN_TYPE = 129
 
 def StepmotorStep(resolution="fine"):
+    # set resolution
     if(resolution == "fine"):
       resolution = 1 # step == 1.8 degree
     if(resolution == "coarse"):
        resolution = 3 # == 5.4 degree
+    # need to add a feature that ties scanning range to certain range
     GPIO.output(dirPin, GPIO.LOW)
     for i in range(resolution):
       GPIO.output(stepPin, GPIO.HIGH)
@@ -40,14 +42,21 @@ def StepmotorStep(resolution="fine"):
       time.sleep(millisBtwnSteps / 100000.0)
 def homing():
   while True:
+    # if homing switch pressed
     if(GPIO.input(homingPin) == 1):
+      # turn 90 clockwise to initialize lidar pos
+      # then break
+      # find way to use arduino as driver instead
+      GPIO.output(dirPin, GPIO.HIGH)
       for i in range(90/1.8):
         GPIO.output(stepPin, GPIO.HIGH)
         time.sleep(pulseWidthMicros / 1000000.0)
         GPIO.output(stepPin, GPIO.LOW)
         time.sleep(millisBtwnSteps / 100000.0)
       break
+    # if homing switch not pressed
     else:
+      # keep turning ccw until switch pressed
       GPIO.output(dirPin, GPIO.LOW)
       GPIO.output(stepPin, GPIO.HIGH)
       time.sleep(pulseWidthMicros / 1000000.0)
