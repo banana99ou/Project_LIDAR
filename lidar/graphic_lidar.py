@@ -54,6 +54,7 @@ try:
     for scan in lidar.iter_scans():
         for (_, angle, distance) in scan:
             scan_data[min([359, floor(angle)])] = distance
+            StepmotorStep(course)
         process_data(scan_data)
 
 except KeyboardInterrupt:
@@ -61,6 +62,11 @@ except KeyboardInterrupt:
     lidar.stop()
     lidar.stop_motor()
     lidar.disconnect()
+
+def StepmotorStep(resolution=fine)
+    if(resolution == fine)
+      resolution = 1
+    
 # issues:
 # .stop() sends stop byte to lidar so chekc what stop byte should be in doc
 # and discriptor length
