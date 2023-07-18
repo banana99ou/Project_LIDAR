@@ -2,7 +2,23 @@
 import pygame
 from math import cos, sin, pi, floor
 from adafruit_rplidar import RPLidar
+import RPi.GPIO as GPIO
+import time
 
+stepYPin = 26  # Y.STEP
+dirYPin = 19  # Y.DIR
+enPin = 13
+stepPin = stepYPin
+dirPin = dirYPin
+stepsPerRev = 200
+pulseWidthMicros = 100  # microseconds 0.0001 second
+millisBtwnSteps = 1000  # 0.001 second
+
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(enPin, GPIO.OUT)
+GPIO.output(enPin, GPIO.LOW)
+GPIO.setup(stepPin, GPIO.OUT)
+GPIO.setup(dirPin, GPIO.OUT)
 
 W = 600
 H = 600
@@ -66,7 +82,23 @@ except KeyboardInterrupt:
 def StepmotorStep(resolution=fine)
     if(resolution == fine)
       resolution = 1
-    
+    GPIO.output(dirPin, GPIO.HIGH)
+    for i in range(resolution):
+      GPIO.output(stepPin, GPIO.HIGH)
+      time.sleep(pulseWidthMicros / 1000000.0)
+      GPIO.output(stepPin, GPIO.LOW)
+      time.sleep(millisBtwnSteps / 100000.0)
+def homing()
+  while True:
+    if(GPIO.input(homingPin) == 1):
+      break
+    else
+      GPIO.output(dirPin, GPIO.LOW)
+      GPIO.output(stepPin, GPIO.HIGH)
+      time.sleep(pulseWidthMicros / 1000000.0)
+      GPIO.output(stepPin, GPIO.LOW)
+      time.sleep(millisBtwnSteps / 100000.0)
+      
 # issues:
 # .stop() sends stop byte to lidar so chekc what stop byte should be in doc
 # and discriptor length
