@@ -18,21 +18,23 @@ void loop() {
  	Serial.println(F("Running clockwise"));
  	digitalWrite(dirPin, HIGH); // Enables the motor to move in a particular direction
  	// Makes 200 pulses for making one full cycle rotation
- 	for (int i = 0; i < stepsPerRev; i++) {
+ 	for (int i = 0; i < stepsPerRev/4; i++) {
  			digitalWrite(stepPin, HIGH);
  			delayMicroseconds(pulseWidthMicros);
  			digitalWrite(stepPin, LOW);
  			delayMicroseconds(millisBtwnSteps);
+      delayMicroseconds(10000000000);
  	}
  	delay(1000); // One second delay
  	Serial.println(F("Running counter-clockwise"));
  	digitalWrite(dirPin, LOW); //Changes the rotations direction
  	// Makes 400 pulses for making two full cycle rotation
- 	for (int i = 0; i < 2*stepsPerRev; i++) {
+ 	for (int i = 0; i < stepsPerRev/4; i++) {
  			digitalWrite(stepPin, HIGH);
  			delayMicroseconds(pulseWidthMicros);
  			digitalWrite(stepPin, LOW);
  			delayMicroseconds(millisBtwnSteps);
+      delayMicroseconds(10000000000);
  	}
  	delay(1000);
 }
