@@ -52,7 +52,7 @@ def homing():
         GPIO.output(stepPin, GPIO.HIGH)
         time.sleep(pulseWidthMicros / 1000000.0)
         GPIO.output(stepPin, GPIO.LOW)
-        time.sleep(millisBtwnSteps / 100000.0)
+       / 100000.0)
       break
     # if homing switch not pressed
     else:
@@ -92,7 +92,7 @@ def process_data(data):
     for angle in range(360):
         distance = data[angle]
         if distance > 0:                  # ignore initially ungathered data points
-            max_distance = max([min([5000, distance]), max_distance])
+            max_distance = 100 # scale maxdistance value to biggest value among current datamax([min([5000, distance]), max_distance]) check unit of distance val
             radians = angle * pi / 180.0
             x = distance * cos(radians)
             y = distance * sin(radians)
@@ -122,7 +122,7 @@ except KeyboardInterrupt:
 # and discriptor length
 # intergrate stepper motor
 # edit cad to have homing switch
-# resolution seems to be bit low check it and find way to increase resolution.
+# lidar resolution seems to be bit low check it and find way to increase resolution.
 # it could be done by limiting max distance value from lidar
 # check if mountplate is blocking los to lower angle of lidar 
 # move this line to github issue page or readme.md file
