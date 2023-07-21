@@ -14,6 +14,8 @@ homingPin = 4 # placeholderplaceholderplaceholderplaceholderplaceholderplacehold
 stepsPerRev = 200
 pulseWidthMicros = 100  # microseconds 0.0001 second
 millisBtwnSteps = 1000  # 0.001 second
+degreesPerStep = 200/360
+angleNow = 0
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(enPin, GPIO.OUT)
@@ -27,6 +29,16 @@ H = 600
 SCAN_BYTE = b'\x20'
 SCAN_TYPE = 129
 
+def singlestep(dir):
+  if dir == 0: # ccw
+    GPIO.output(dirPin, GPIO.LOW)
+  elif dir == 1: #cw
+    GPIO.output(dirPin, GPIO.HIGH)
+  GPIO.output(stepPin, GPIO.HIGH)
+  time.sleep(pulseWidthMicros / 1000000.0)
+  GPIO.output(stepPin, GPIO.LOW)
+  time.sleep(millisBtwnSteps / 100000.0)
+  
 def StepmotorStep(resolution="fine"):
     # set resolution
     if(resolution == "fine"):
@@ -34,25 +46,26 @@ def StepmotorStep(resolution="fine"):
     if(resolution == "coarse"):
        resolution = 3 # == 5.4 degree
     # need to add a feature that ties scanning range to certain range
-    GPIO.output(dirPin, GPIO.LOW)
     for i in range(resolution):
-      GPIO.output(stepPin, GPIO.HIGH)
-      time.sleep(pulseWidthMicros / 1000000.0)
-      GPIO.output(stepPin, GPIO.LOW)
-      time.sleep(millisBtwnSteps / 100000.0)
+      if angleNow > 45:
+        singlestep(0)
+        angleNow += resolution * degreesPerStep
 def homing():
   while True:
     # if homing switch pressed
     if(GPIO.input(homingPin) == 1):
-      # turn 90 clockwise to initialize lidar pos
+      # turn 45 clockwise to move to 90 degree position and initialize lidar pos
       # then break
       # find way to use arduino as driver instead
+      angleNow = 45
       GPIO.output(dirPin, GPIO.HIGH)
-      for i in range(90/1.8):
+      for i in range(45/1.8):
         GPIO.output(stepPin, GPIO.HIGH)
         time.sleep(pulseWidthMicros / 1000000.0)
         GPIO.output(stepPin, GPIO.LOW)
-       / 100000.0)
+        time.sleep(millisBtwnSteps / 100000.0)
+        angleNow += 1.8
+      # angleNow = 90
       break
     # if homing switch not pressed
     else:
