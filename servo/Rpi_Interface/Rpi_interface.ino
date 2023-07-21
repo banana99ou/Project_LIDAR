@@ -4,6 +4,9 @@ const int stepPin = 3; //Y.STEP
 const int dirPin = 6; // Y.DIR
 const int enPin = 8;
 const float steps/degree = 0.5555555556
+const int stepsPerRev=200;
+int pulseWidthMicros = 100; 	// microseconds
+int millisBtwnSteps = 1000;
 
 void setup() {
     Serial.begin(9600);
@@ -20,5 +23,10 @@ void setup() {
 void loop() {
     // read inputPin and step the motor
     // restrain scan range
-    if(digitalRead(finePin) == HIGH)
+    if(digitalRead(finePin) == HIGH){
+        digitalWrite(stepPin, HIGH);
+        delayMicroseconds(pulseWidthMicros);
+        digitalWrite(stepPin, LOW);
+        delayMicroseconds(millisBtwnSteps);
+    }
 }
