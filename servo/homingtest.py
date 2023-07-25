@@ -85,5 +85,4 @@ homing()
 for i in range(10):
     StepmotorStep()
     print("stepping")
-    print(angleNow)
 print("end")
