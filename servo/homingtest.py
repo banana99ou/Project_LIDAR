@@ -54,9 +54,9 @@ def StepmotorStep(resolution="fine"):
         resolution = 1  # == 1,8 degree
     if resolution == "coarse":
         resolution = 5  # == 9 degree
-    if stepdir == "cw" and angleNow <= 135:
+    if stepdir == "cw" and angleNow <= 75:
         stepdir = "ccw"
-    if stepdir == "ccw" and angleNow >= 225:
+    if stepdir == "ccw" and angleNow >= 125:
         stepdir = "cw"
     # need to add a feature that ties scanning range to certain range
     step(stepdir, resolution)
@@ -82,7 +82,7 @@ def homing():
             step("ccw", 1)
 
 homing()
-for i in range(10):
+for i in range(200):
     StepmotorStep()
     print("stepping")
 print("end")
