@@ -25,6 +25,7 @@ def step(dir, angle):
     # handle stepper motor
     # takes in dirrection and angle in degrees and keep record of current angle
     if dir == "cw":
+        global angleNow
         GPIO.output(dirPin, GPIO.HIGH)
         anglestep = 1.8 
     if dir == "ccw":
@@ -35,7 +36,7 @@ def step(dir, angle):
         time.sleep(pulseWidthMicros / 1000000.0)
         GPIO.output(stepPin, GPIO.LOW)
         time.sleep(millisBtwnSteps / 100000.0)
-        global angleNow += anglestep
+        angleNow += anglestep
     
 def StepmotorStep(resolution="fine"):
     # set resolution
@@ -49,8 +50,6 @@ def StepmotorStep(resolution="fine"):
         stepdir = "cw"
     # need to add a feature that ties scanning range to certain range
     step(stepdir, resolution)
-    return angleNow
-
 
 def homing():
     while True:
