@@ -74,8 +74,8 @@ def homing():
             # then break
             # find way to use arduino as driver instead
             step("cw", 50)
-            break
             time.sleep(1)
+            break
         # if homing switch not pressed
         else:
             # keep turning ccw until switch pressed
