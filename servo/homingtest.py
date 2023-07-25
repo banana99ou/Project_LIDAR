@@ -59,6 +59,8 @@ def homing():
         if GPIO.input(HomingPin):
             global angleNow 
             angleNow = 45 # 25 step
+            print("reset")
+            print(angleNow)
             # turn 90 clockwise to initialize lidar pos
             # then break
             # find way to use arduino as driver instead
