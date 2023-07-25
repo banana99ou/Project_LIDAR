@@ -4,12 +4,22 @@ import time
 stepPin = 26  # Y.STEP
 dirPin = 19  # Y.DIR
 enPin = 13
-homingPin = 4  # placeholderplaceholderplaceholderplaceholderplaceholderplaceholderplaceholderplaceholder
+HomingPin = 20
+HomingCommon = 21
 stepsPerRev = 200
 pulseWidthMicros = 100  # microseconds 0.0001 second
 millisBtwnSteps = 1000  # 0.001 second
 angleNow = 0
 stepdir = "cw"
+
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(enPin, GPIO.OUT)
+GPIO.output(enPin, GPIO.LOW)
+GPIO.setup(stepPin, GPIO.OUT)
+GPIO.setup(dirPin, GPIO.OUT)
+GPIO.setup(HomingPin, GPIO.IN, pull_up_down-GPIO.PUD_DOWN)
+GPIO.setup(HomingCommon, GPIO.OUT)
+GPIO.output(HomingCommon, GPIO.HIGH)
 
 def step(dir, angle):
     # handle stepper motor
@@ -25,7 +35,7 @@ def step(dir, angle):
         time.sleep(pulseWidthMicros / 1000000.0)
         GPIO.output(stepPin, GPIO.LOW)
         time.sleep(millisBtwnSteps / 100000.0)
-        angleNow += anglestep
+        global angleNow += anglestep
     
 def StepmotorStep(resolution="fine"):
     # set resolution
@@ -45,8 +55,8 @@ def StepmotorStep(resolution="fine"):
 def homing():
     while True:
         # if homing switch pressed
-        if (GPIO.input(homingPin) == 1):
-            angleNow = 45 # 25 step
+        if GPIO.input(HomingPin):
+            global angleNow = 45 # 25 step
             # turn 90 clockwise to initialize lidar pos
             # then break
             # find way to use arduino as driver instead
@@ -61,4 +71,5 @@ homing()
 for i in range(10):
     StepmotorStep()
     print("stepping")
+    print(angleNow)
 print("end")
