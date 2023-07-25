@@ -42,10 +42,11 @@ def step(dir, angle):
     
 def StepmotorStep(resolution="fine"):
     # set resolution
+    global stepdir
     if resolution == "fine":
-        resolution = 1  # step == 1.8 degree
+        resolution = 1.8  # == 1 step
     if resolution == "coarse":
-        resolution = 3  # == 5.4 degree
+        resolution = 5.4  # == 3 step
     if stepdir == "cw" and angleNow <= 135:
         stepdir = "ccw"
     if stepdir == "ccw" and angleNow >= 225:
