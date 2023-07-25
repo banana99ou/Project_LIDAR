@@ -37,6 +37,8 @@ def step(dir, angle):
         GPIO.output(stepPin, GPIO.LOW)
         time.sleep(millisBtwnSteps / 100000.0)
         angleNow += anglestep
+        print(angleNow)
+        time.sleep(0.1)
     
 def StepmotorStep(resolution="fine"):
     # set resolution
