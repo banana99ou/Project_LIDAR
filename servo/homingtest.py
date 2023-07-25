@@ -31,7 +31,7 @@ def step(dir, angle):
     if dir == "ccw":
         GPIO.output(dirPin, GPIO.LOW)
         anglestep = -1.8
-    for i in range(angle/1.8):
+    for i in range(int(angle/1.8)):
         GPIO.output(stepPin, GPIO.HIGH)
         time.sleep(pulseWidthMicros / 1000000.0)
         GPIO.output(stepPin, GPIO.LOW)
