@@ -48,6 +48,9 @@ def step(dir, angle):
         time.sleep(0.1)
     
 def StepmotorStep(resolution="fine"):
+    if GPIO.input(HomingPin):
+        step("cw", 20)
+        pfdap
     # set resolution
     global stepdir
     if resolution == "fine":
