@@ -1,6 +1,13 @@
 import RPi.GPIO as GPIO
 import time
 
+# all angle in terms of step
+# 200 step = 360
+# 100 step = 180
+# 50 step = 90
+# 25 step = 45
+# 5 step = 9
+
 stepPin = 26  # Y.STEP
 dirPin = 19  # Y.DIR
 enPin = 13
@@ -27,11 +34,11 @@ def step(dir, angle):
     if dir == "cw":
         global angleNow
         GPIO.output(dirPin, GPIO.HIGH)
-        anglestep = 1.8 
+        anglestep = 1 
     if dir == "ccw":
         GPIO.output(dirPin, GPIO.LOW)
-        anglestep = -1.8
-    for i in range(int(angle/1.8)):
+        anglestep = -1
+    for i in range(int(angle)):
         GPIO.output(stepPin, GPIO.HIGH)
         time.sleep(pulseWidthMicros / 1000000.0)
         GPIO.output(stepPin, GPIO.LOW)
@@ -44,9 +51,9 @@ def StepmotorStep(resolution="fine"):
     # set resolution
     global stepdir
     if resolution == "fine":
-        resolution = 1.8  # == 1 step
+        resolution = 1  # == 1,8 degree
     if resolution == "coarse":
-        resolution = 5.4  # == 3 step
+        resolution = 5  # == 9 degree
     if stepdir == "cw" and angleNow <= 135:
         stepdir = "ccw"
     if stepdir == "ccw" and angleNow >= 225:
@@ -59,18 +66,18 @@ def homing():
         # if homing switch pressed
         if GPIO.input(HomingPin):
             global angleNow 
-            angleNow = 45 # 25 step
+            angleNow = 25 # 45 degree
             print("reset")
             print(angleNow)
             # turn 90 clockwise to initialize lidar pos
             # then break
             # find way to use arduino as driver instead
-            step("cw", 90)
+            step("cw", 50)
             break
         # if homing switch not pressed
         else:
             # keep turning ccw until switch pressed
-            step("ccw", 1.8)
+            step("ccw", 1)
 
 homing()
 for i in range(10):
