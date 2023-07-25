@@ -17,7 +17,7 @@ GPIO.setup(enPin, GPIO.OUT)
 GPIO.output(enPin, GPIO.LOW)
 GPIO.setup(stepPin, GPIO.OUT)
 GPIO.setup(dirPin, GPIO.OUT)
-GPIO.setup(HomingPin, GPIO.IN, pull_up_down-GPIO.PUD_DOWN)
+GPIO.setup(HomingPin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(HomingCommon, GPIO.OUT)
 GPIO.output(HomingCommon, GPIO.HIGH)
 
