@@ -1,5 +1,6 @@
 from math import floor
-from adafruit_rplidar import RPLidar
+from adafruit_rplidar import RPLidar, RPLidarException
+import time
 
 PORT_NAME = '/dev/ttyUSB0'
 lidar = RPLidar(None, PORT_NAME, timeout=3)
@@ -16,6 +17,15 @@ try:
         for (_, angle, distance) in scan:
             scan_data[min([359, floor(angle)])] = distance
         process_data(scan_data)
+
+
+except RPLidarException as e:
+    print(f"RPLidar Exception: {e}")
+    lidar.stop_motor()
+    lidar.disconnect()
+    time.sleep(2)  # Add a small delay before reconnecting to the sensor
+    lidar.connect()
+    lidar.start_motor()
 
 except KeyboardInterrupt:
     print('Stopping.')
