@@ -84,8 +84,9 @@ def homing():
             # keep turning ccw until switch pressed
             step("ccw", 1)
 
-homing()
-for i in range(200):
-    StepmotorStep()
-    print("stepping")
-print("end")
+if __name__ == "__main__":
+    homing()
+    for i in range(200):
+        StepmotorStep()
+        print("stepping")
+    print("end")
