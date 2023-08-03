@@ -49,7 +49,7 @@ def step(dir, angle):
         time.sleep(millisBtwnSteps / 100000.0)
         angleNow += anglestep
         print(angleNow * StepToAngle)
-        #time.sleep(0.1)
+        time.sleep(0.1)
     
 def StepmotorStep(resolution="fine"): # , ifinit):
     # emergencystop
