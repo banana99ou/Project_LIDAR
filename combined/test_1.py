@@ -143,9 +143,9 @@ while True:
     except KeyboardInterrupt:
         print('Stopping.')
         break
-    lidar.stop()
-    lidar.stop_motor()
-    lidar.disconnect()
+lidar.stop()
+lidar.stop_motor()
+lidar.disconnect()
 
 
 # issues:
