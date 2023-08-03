@@ -124,7 +124,7 @@ while True:
         for scan in lidar.iter_scans():
             for (_, angle, distance) in scan:
                 scan_data[min([359, floor(angle)])] = distance
-                homingtest.StepmotorStep()
+            homingtest.StepmotorStep()
             process_data(scan_data)
 
     except RPLidarException as e:
