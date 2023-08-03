@@ -77,10 +77,10 @@ def homing():
             print("reset")
             print(angleNow)
             time.sleep(0.5)
-            # turn 90 clockwise to initialize lidar pos
+            # turn 180 clockwise to initialize lidar pos
             # then break
             # find way to use arduino as driver instead
-            step("cw", 50)
+            step("cw", 100)
             time.sleep(1)
             break
         # if homing switch not pressed
