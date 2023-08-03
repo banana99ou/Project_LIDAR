@@ -1,6 +1,7 @@
 from math import floor
 from adafruit_rplidar import RPLidar, RPLidarException
 import time
+import random
 
 PORT_NAME = '/dev/ttyUSB0'
 lidar = RPLidar(None, PORT_NAME, timeout=3)
@@ -24,7 +25,7 @@ while True:
         print(f"RPLidar Exception: {e}")
         lidar.stop_motor()
         lidar.disconnect()
-        time.sleep(2)  # Add a small delay before reconnecting to the sensor
+        time.sleep(random.randrange(0,10)/10)
         lidar.connect()
         lidar.start_motor()
 
