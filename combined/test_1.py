@@ -131,7 +131,7 @@ while True:
         print(f"RPLidar Exception: {e}")
         lidar.stop_motor()
         lidar.disconnect()
-        time.sleep(random.randrange(0.5,1))  # Add a small delay before reconnecting to the sensor
+        time.sleep(random.randrange(0,1))  # Add a small delay before reconnecting to the sensor
         lidar.connect()
         lidar.start_motor()
 
