@@ -63,8 +63,10 @@ def StepmotorStep(resolution="fine"): # , ifinit):
     if resolution == "coarse":
         resolution = 5  # == 9 degree
     if stepdir == "cw" and angleNow <= 125:
+        print("CW bound")
         stepdir = "ccw"
-    if stepdir == "ccw" and angleNow >= 75:
+    elif stepdir == "ccw" and angleNow >= 75:
+        print("CCW bound")
         stepdir = "cw"
     # need to add a feature that ties scanning range to certain range
     print("stepdir: ", stepdir)
