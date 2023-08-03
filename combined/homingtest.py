@@ -21,6 +21,7 @@ pulseWidthMicros = 100  # microseconds 0.0001 second
 millisBtwnSteps = 1000  # 0.001 second
 angleNow = 0
 stepdir = "cw"
+StepToAngle = 360/200
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(enPin, GPIO.OUT)
@@ -47,7 +48,7 @@ def step(dir, angle):
         GPIO.output(stepPin, GPIO.LOW)
         time.sleep(millisBtwnSteps / 100000.0)
         angleNow += anglestep
-        print(angleNow)
+        print(angleNow * StepToAngle)
         #time.sleep(0.1)
     
 def StepmotorStep(resolution="fine"):
@@ -75,7 +76,7 @@ def homing():
             global angleNow 
             angleNow = 25 # 45 degree
             print("reset")
-            print(angleNow)
+            print(angleNow * StepToAngle)
             time.sleep(0.5)
             # turn 180 clockwise to initialize lidar pos
             # then break
