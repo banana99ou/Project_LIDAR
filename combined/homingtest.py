@@ -51,7 +51,7 @@ def step(dir, angle):
         print(angleNow * StepToAngle)
         #time.sleep(0.1)
     
-def StepmotorStep(resolution="fine"):
+def StepmotorStep(resolution="fine", ifinit):
     # emergencystop
     # stop and go back few step
     if GPIO.input(HomingPin):
@@ -62,9 +62,9 @@ def StepmotorStep(resolution="fine"):
         resolution = 1  # == 1,8 degree
     if resolution == "coarse":
         resolution = 5  # == 9 degree
-    if stepdir == "cw" and angleNow <= 75:
+    if stepdir == "cw" and angleNow <= 125:
         stepdir = "ccw"
-    if stepdir == "ccw" and angleNow >= 125:
+    if stepdir == "ccw" and angleNow >= 75:
         stepdir = "cw"
     # need to add a feature that ties scanning range to certain range
     print("stepdir: ", stepdir)
