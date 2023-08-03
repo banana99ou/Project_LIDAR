@@ -51,7 +51,7 @@ def step(dir, angle):
         print(angleNow * StepToAngle)
         #time.sleep(0.1)
     
-def StepmotorStep(resolution="fine", ifinit):
+def StepmotorStep(resolution="fine"): # , ifinit):
     # emergencystop
     # stop and go back few step
     if GPIO.input(HomingPin):
