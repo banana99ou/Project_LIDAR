@@ -134,7 +134,8 @@ while True:
         lidar.connect()
         lidar.start_motor()
 
-    except homingtest.StepperError:
+    except homingtest.StepperError as e:
+        print(f"Stepper Error: {e}")
         print("angleNow error")
         homingtest.step("cw", 20)
         print("recallibration")
@@ -143,6 +144,7 @@ while True:
     except KeyboardInterrupt:
         print('Stopping.')
         break
+    
 lidar.stop()
 lidar.stop_motor()
 lidar.disconnect()
