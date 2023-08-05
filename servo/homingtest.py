@@ -8,6 +8,9 @@ import time
 # 25 step = 45
 # 5 step = 9
 
+class StepperError(Exception):
+    '''error'''
+
 stepPin = 26  # Y.STEP
 dirPin = 19  # Y.DIR
 enPin = 13
@@ -18,6 +21,7 @@ pulseWidthMicros = 100  # microseconds 0.0001 second
 millisBtwnSteps = 1000  # 0.001 second
 angleNow = 0
 stepdir = "cw"
+StepToAngle = 360/200
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(enPin, GPIO.OUT)
@@ -44,24 +48,28 @@ def step(dir, angle):
         GPIO.output(stepPin, GPIO.LOW)
         time.sleep(millisBtwnSteps / 100000.0)
         angleNow += anglestep
-        print(angleNow)
-        time.sleep(0.1)
+        # print(angleNow)
+        # time.sleep(0.1)
     
 def StepmotorStep(resolution="fine"):
+    # emergencystop
+    # stop and go back few step
     if GPIO.input(HomingPin):
-        step("cw", 20)
-        pfdap
+        raise StepperError('Angle Error')
     # set resolution
     global stepdir
     if resolution == "fine":
         resolution = 1  # == 1,8 degree
     if resolution == "coarse":
         resolution = 5  # == 9 degree
-    if stepdir == "cw" and angleNow <= 75:
+    if stepdir == "cw" and angleNow >= 125: #225 d
+        print("CW bound")
         stepdir = "ccw"
-    if stepdir == "ccw" and angleNow >= 125:
+    elif stepdir == "ccw" and angleNow <= 75: # 135 d
+        print("CCW bound")
         stepdir = "cw"
     # need to add a feature that ties scanning range to certain range
+    # print("stepdir: ", stepdir)
     step(stepdir, resolution)
 
 def homing():
@@ -69,14 +77,14 @@ def homing():
         # if homing switch pressed
         if GPIO.input(HomingPin):
             global angleNow 
-            angleNow = 25 # 45 degree
+            angleNow = -25 # 45 degree
             print("reset")
-            print(angleNow)
+            # print(angleNow * StepToAngle)
             time.sleep(0.5)
-            # turn 90 clockwise to initialize lidar pos
+            # turn 180 clockwise to initialize lidar pos
             # then break
             # find way to use arduino as driver instead
-            step("cw", 50)
+            step("cw", 150)
             time.sleep(1)
             break
         # if homing switch not pressed

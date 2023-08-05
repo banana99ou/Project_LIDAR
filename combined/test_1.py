@@ -4,7 +4,7 @@ from adafruit_rplidar import RPLidar,RPLidarException
 import RPi.GPIO as GPIO
 # import pygame
 import time
-import homingtest
+import StepModule as homingtest
 import random
 
 stepPin = 26  # Y.STEP
@@ -28,6 +28,85 @@ GPIO.setup(dirPin, GPIO.OUT)
 
 SCAN_BYTE = b'\x20'
 SCAN_TYPE = 129
+
+# Setup pygame
+# pygame.display.init()
+# lcd = pygame.display.set_mode((H, H))
+# pygame.mouse.set_visible(False)
+# lcd.fill((200, 0, 0))
+# pygame.display.update()
+
+# Setup the RPLidar
+PORT_NAME = '/dev/ttyUSB0'
+lidar = RPLidar(None, PORT_NAME, timeout=3)
+
+# used to scale data to fit on the screen
+max_distance = 0
+
+
+def process_data(data):
+    global max_distance
+    # lcd.fill((0, 0, 0))
+    # point = (int(W / 2), int(H / 2))
+
+    # pygame.draw.circle(lcd, pygame.Color(255, 255, 255), point, 10)
+    # pygame.draw.circle(lcd, pygame.Color(100, 100, 100), point, 100, 1)
+    # pygame.draw.line(lcd, pygame.Color(100, 100, 100), (0, int(H/2)), (W, int(H/2)))
+    # pygame.draw.line(lcd, pygame.Color(100, 100, 100), (int(W/2), 0), (int(W/2), H))
+
+    # for angle in range(360):
+    #     distance = data[angle]
+    #     if distance > 0:                  # ignore initially ungathered data points
+    #         # scale maxdistance value to biggest value among current datamax([min([5000, distance]), max_distance]) check unit of distance val
+    #         max_distance = 100
+    #         radians = angle * pi / 180.0
+    #         x = distance * cos(radians)
+    #         y = distance * sin(radians)
+    #         point = (int(W / 2) + int(x / max_distance * (W/2)),
+    #                  int(H/2) + int(y / max_distance * (H/2)))
+    #         pygame.draw.circle(lcd, pygame.Color(255, 0, 0), point, 2)
+    # pygame.display.update()
+    print(data)
+
+homingtest.homing()
+
+scan_data = [0] * 360 
+Single_Scan = [0] * 360
+
+while True:
+    try:
+        for scan in lidar.iter_scans():
+            for (_, angle, distance) in scan:
+                Single_Scan[min([359, floor(angle)])] = distance
+            IsScanEdge = homingtest.StepmotorStep()
+            if IsScanEdge == 1:
+                scan_data.append(Single_Scan)
+            elif IsScanEdge == -1:
+                scan_data.append(Single_Scan[::-1])
+        process_data(scan_data)
+
+    except RPLidarException as e:
+        print(f"RPLidar Exception: {e}")
+        lidar.stop_motor()
+        lidar.disconnect()
+        time.sleep(random.randrange(0,10)/10)  # Add a small delay before reconnecting to the sensor
+        lidar.connect()
+        lidar.start_motor()
+
+    except homingtest.StepperError as e:
+        print(f"Stepper Error: {e}")
+        homingtest.step("cw", 20)
+        print("recallibration")
+        homingtest.homing()
+
+    except KeyboardInterrupt:
+        print('Stopping.')
+        break
+
+lidar.stop()
+lidar.stop_motor()
+lidar.disconnect()
+
 
 # def step(dir, angle):
 #     # handle stepper motor
@@ -74,81 +153,6 @@ SCAN_TYPE = 129
 #         else:
 #             # keep turning ccw until switch pressed
 #             step("ccw", 1.8)
-
-
-# Setup pygame
-# pygame.display.init()
-# lcd = pygame.display.set_mode((H, H))
-# pygame.mouse.set_visible(False)
-# lcd.fill((200, 0, 0))
-# pygame.display.update()
-
-# Setup the RPLidar
-PORT_NAME = '/dev/ttyUSB0'
-lidar = RPLidar(None, PORT_NAME, timeout=3)
-
-# used to scale data to fit on the screen
-max_distance = 0
-
-
-def process_data(data):
-    global max_distance
-    # lcd.fill((0, 0, 0))
-    # point = (int(W / 2), int(H / 2))
-
-    # pygame.draw.circle(lcd, pygame.Color(255, 255, 255), point, 10)
-    # pygame.draw.circle(lcd, pygame.Color(100, 100, 100), point, 100, 1)
-    # pygame.draw.line(lcd, pygame.Color(100, 100, 100), (0, int(H/2)), (W, int(H/2)))
-    # pygame.draw.line(lcd, pygame.Color(100, 100, 100), (int(W/2), 0), (int(W/2), H))
-
-    # for angle in range(360):
-    #     distance = data[angle]
-    #     if distance > 0:                  # ignore initially ungathered data points
-    #         # scale maxdistance value to biggest value among current datamax([min([5000, distance]), max_distance]) check unit of distance val
-    #         max_distance = 100
-    #         radians = angle * pi / 180.0
-    #         x = distance * cos(radians)
-    #         y = distance * sin(radians)
-    #         point = (int(W / 2) + int(x / max_distance * (W/2)),
-    #                  int(H/2) + int(y / max_distance * (H/2)))
-    #         pygame.draw.circle(lcd, pygame.Color(255, 0, 0), point, 2)
-    # pygame.display.update()
-    print(data)
-
-homingtest.homing()
-
-scan_data = [0] * 360 
-
-while True:
-    try:
-        for scan in lidar.iter_scans():
-            for (_, angle, distance) in scan:
-                scan_data[min([359, floor(angle)])] = distance
-            homingtest.StepmotorStep()
-            process_data(scan_data)
-
-    except RPLidarException as e:
-        print(f"RPLidar Exception: {e}")
-        lidar.stop_motor()
-        lidar.disconnect()
-        time.sleep(random.randrange(0,1))  # Add a small delay before reconnecting to the sensor
-        lidar.connect()
-        lidar.start_motor()
-
-    except homingtest.StepperError as e:
-        print(f"Stepper Error: {e}")
-        print("angleNow error")
-        homingtest.step("cw", 20)
-        print("recallibration")
-        homingtest.homing()
-
-    except KeyboardInterrupt:
-        print('Stopping.')
-        break
-
-lidar.stop()
-lidar.stop_motor()
-lidar.disconnect()
 
 
 # issues:

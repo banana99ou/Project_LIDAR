@@ -48,12 +48,13 @@ def step(dir, angle):
         GPIO.output(stepPin, GPIO.LOW)
         time.sleep(millisBtwnSteps / 100000.0)
         angleNow += anglestep
-        print(angleNow * StepToAngle)
-        #time.sleep(0.1)
+        # print(angleNow * StepToAngle)
+        # time.sleep(0.1)
     
 def StepmotorStep(resolution="fine"): # , ifinit):
     # emergencystop
     # stop and go back few step
+    IsScanEdge = "Nan" 
     if GPIO.input(HomingPin):
         raise StepperError('Angle Error')
     # set resolution
@@ -63,14 +64,21 @@ def StepmotorStep(resolution="fine"): # , ifinit):
     if resolution == "coarse":
         resolution = 5  # == 9 degree
     if stepdir == "cw" and angleNow >= 125: #225 d
+        # if lidar scan range right edge (from lidar's perspective)
         print("CW bound")
         stepdir = "ccw"
+        IsScanEdge = 1 # "Right"
     elif stepdir == "ccw" and angleNow <= 75: # 135 d
+        # if lidar scan range left edge
         print("CCW bound")
         stepdir = "cw"
+        IsScanEdge = -1 # "left"
+    else:
+        IsScanEdge = 0 # "Nan"
     # need to add a feature that ties scanning range to certain range
-    print("stepdir: ", stepdir)
+    # print("stepdir: ", stepdir)
     step(stepdir, resolution)
+    return IsScanEdge
 
 def homing():
     while True:
@@ -79,7 +87,7 @@ def homing():
             global angleNow 
             angleNow = -25 # 45 degree
             print("reset")
-            print(angleNow * StepToAngle)
+            # print(angleNow * StepToAngle)
             time.sleep(0.5)
             # turn 180 clockwise to initialize lidar pos
             # then break
@@ -92,8 +100,9 @@ def homing():
             # keep turning ccw until switch pressed
             step("ccw", 1)
 
-homing()
-for i in range(200):
-    StepmotorStep()
-    print("stepping")
-print("end")
+if __name__ == "__main__":
+    homing()
+    for i in range(200):
+        StepmotorStep()
+        print("stepping")
+    print("end")
