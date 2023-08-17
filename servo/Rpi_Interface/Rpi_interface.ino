@@ -13,6 +13,7 @@ int angleNow = 0;
 String stepdir = "cw";
 float StepToAngle = 360/200;
 bool stringComplete;
+string inputString;
 
 void step(String dir, int angle) {
   // handle stepper motor
@@ -96,15 +97,20 @@ void serialRead() {
 }
 
 void setup() {
-    Serial.begin(9600);
-    pinMode(enPin, OUTPUT);
-    digitalWrite(enPin, LOW);
-    pinMode(stepPin, OUTPUT);
-    pinMode(dirPin, OUTPUT);
-    pinMode(finePin, INPUT);
-    pinMode(coarsePin, INPUT);
+  Serial.begin(9600);
+  pinMode(enPin, OUTPUT);
+  digitalWrite(enPin, LOW);
+  pinMode(stepPin, OUTPUT);
+  pinMode(dirPin, OUTPUT);
+  pinMode(finePin, INPUT);
+  pinMode(coarsePin, INPUT);
 }
 
 void loop() {
   serialRead()
+  if(stringComplete){
+    if(inputString.startsWith("step")){
+      dir = inputString[4];
+    }
+  }
 }
