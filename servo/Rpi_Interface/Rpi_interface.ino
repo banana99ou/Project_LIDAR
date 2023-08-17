@@ -12,6 +12,7 @@ int millisBtwnSteps = 1000;
 int angleNow = 0;
 String stepdir = "cw";
 float StepToAngle = 360/200;
+bool stringComplete;
 
 void step(String dir, int angle) {
   // handle stepper motor
@@ -81,6 +82,19 @@ void homing() {
   }
 }
 
+void serialRead() {
+  while(Serial.available()){
+    char inChar = (char)Serial.read();
+    inputString += inChar;
+    if(inChar =='\n'){
+      stringComplete = true;
+    }
+    else{
+      stringComplete = false;
+    }
+  }
+}
+
 void setup() {
     Serial.begin(9600);
     pinMode(enPin, OUTPUT);
@@ -89,15 +103,8 @@ void setup() {
     pinMode(dirPin, OUTPUT);
     pinMode(finePin, INPUT);
     pinMode(coarsePin, INPUT);
-
-    // homing routine
 }
 
 void loop() {
-  homing();
-  for (int i = 0; i < 200; i++) {
-    StepmotorStep();
-    Serial.println("stepping");
-  }
-  Serial.println("end");
+  serialRead()
 }

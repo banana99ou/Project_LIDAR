@@ -1,14 +1,26 @@
-import RPi.GPIO as GPIO
+import serial
+import time
 
-somePin1 = 26
-somePin2 = 19
-angle = "fine"
+dir = 0
+res = 0
 
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(somePin1, GPIO.OUT)
-GPIO.setup(somePin2, GPIO.OUT)
+SerialArduino = serial.Serial('/dev/ttyUSB1', 9600, timeout=5) # port is subject to change
 
-if angle == "fine":
-    GPIO.output(somePin1, GPIO.HIGH)
-if angle == "coarse":
-    GPIO.output(somePin2, GPIO.HIGH)
+InSTR = SerialArduino.readline()
+print("Raw Serial input: " + InSTR.decode("UTF-8").strip())
+
+
+while 1:
+    # request to step x degree or step
+    SerialArduino.write(b'step' + str(dir) + str(res))
+
+    InSTR = SerialArduino.readline()
+
+    # receicve acknowledge statement
+    if InSTR.decode("utf-8").strip() is True:
+        # if request acknloedged pass
+        pass
+    else:
+        # if request not acknowledged send request again
+
+    # recive action complete statement
