@@ -109,10 +109,8 @@ void setup() {
 void loop() {
   serialRead();
   if(stringComplete){
-    if (stringComplete) {
-      // Echo the received command back to the Raspberry Pi as an acknowledgment
-      Serial.println("ACK: " + inputString);
-      stringComplete = false; // Clear the input buffer
-    }
+    // Echo the received command back to the Raspberry Pi as an acknowledgment
+    Serial.println("ACK: " + inputString);
+    stringComplete = false; // Clear the input buffer
   }
 }
