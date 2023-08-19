@@ -14,9 +14,9 @@ while 1:
     SerialArduino.write(b'step' + dir.to_bytes(2, "little") + res.to_bytes(2, "little"))
 
     InSTR = SerialArduino.readline()
+    print("Raw Serial input: " + InSTR.decode("UTF-8").strip())
 
     # receicve acknowledge statement
-    print(InSTR)
     if InSTR.decode("utf-8").strip() is True:
         # if request acknloedged pass
         pass
