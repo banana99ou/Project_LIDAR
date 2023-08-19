@@ -84,8 +84,11 @@ void homing() {
 }
 
 void serialRead() {
+  // Serial.println("SerialRead");
   while(Serial.available()){
+    // Serial.println("SerialAvail");
     char inChar = (char)Serial.read();
+    Serial.print(inChar);
     inputString += inChar;
     if(inChar =='\n'){
       stringComplete = true;
