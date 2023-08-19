@@ -12,6 +12,7 @@ print("Raw Serial input: " + InSTR.decode("UTF-8").strip())
 while 1:
     # request to step x degree or step
     SerialArduino.write(b'step' + dir.to_bytes(2, "little") + res.to_bytes(2, "little"))
+    print(b'step' + dir.to_bytes(2, "little") + res.to_bytes(2, "little"))
 
     InSTR = SerialArduino.readline()
     print("Raw Serial input: " + InSTR.decode("UTF-8").strip())
