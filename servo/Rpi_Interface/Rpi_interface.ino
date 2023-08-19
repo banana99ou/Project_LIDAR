@@ -109,9 +109,10 @@ void setup() {
 void loop() {
   serialRead();
   if(stringComplete){
-    Serial.print(inputString);
-    // if(inputString.startsWith("step")){
-    //   dir = inputString[4];
-    // }
+    if (stringComplete) {
+      // Echo the received command back to the Raspberry Pi as an acknowledgment
+      Serial.println("ACK: " + inputString);
+      stringComplete = false; // Clear the input buffer
+    }
   }
 }

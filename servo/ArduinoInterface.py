@@ -2,13 +2,12 @@ import serial
 import time
 
 dir = 0
-res = 0
+res = 1
 
 SerialArduino = serial.Serial('/dev/ttyACM0', 9600, timeout=5) # port is subject to change
 
 InSTR = SerialArduino.readline()
 print("Raw Serial input: " + InSTR.decode("UTF-8").strip())
-
 
 while 1:
     # request to step x degree or step
@@ -17,6 +16,7 @@ while 1:
     InSTR = SerialArduino.readline()
 
     # receicve acknowledge statement
+    print(InSTR)
     if InSTR.decode("utf-8").strip() is True:
         # if request acknloedged pass
         pass
