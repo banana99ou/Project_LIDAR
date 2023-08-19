@@ -13,7 +13,7 @@ int angleNow = 0;
 String stepdir = "cw";
 float StepToAngle = 360/200;
 bool stringComplete;
-string inputString;
+String inputString;
 
 void step(String dir, int angle) {
   // handle stepper motor
@@ -107,10 +107,11 @@ void setup() {
 }
 
 void loop() {
-  serialRead()
+  serialRead();
   if(stringComplete){
-    if(inputString.startsWith("step")){
-      dir = inputString[4];
-    }
+    Serial.print(inputString);
+    // if(inputString.startsWith("step")){
+    //   dir = inputString[4];
+    // }
   }
 }

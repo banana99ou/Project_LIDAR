@@ -4,7 +4,7 @@ import time
 dir = 0
 res = 0
 
-SerialArduino = serial.Serial('/dev/ttyUSB1', 9600, timeout=5) # port is subject to change
+SerialArduino = serial.Serial('/dev/ttyACM0', 9600, timeout=5) # port is subject to change
 
 InSTR = SerialArduino.readline()
 print("Raw Serial input: " + InSTR.decode("UTF-8").strip())
@@ -20,7 +20,7 @@ while 1:
     if InSTR.decode("utf-8").strip() is True:
         # if request acknloedged pass
         pass
-    else:
+    else: 
         # if request not acknowledged send request again
-
+        pass
     # recive action complete statement
