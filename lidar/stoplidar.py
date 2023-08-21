@@ -3,7 +3,7 @@ from adafruit_rplidar import RPLidar
 PORT_NAME = '/dev/ttyUSB0'
 lidar = RPLidar(None, PORT_NAME, timeout=3)
 try:
-    for i in range(10):
+    while True:
         lidar.stop_motor()
         time.sleep(5)
         print("ran")

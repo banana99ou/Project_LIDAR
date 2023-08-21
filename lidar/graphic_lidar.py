@@ -1,8 +1,9 @@
 # import os
 from math import cos, sin, pi, floor
-from adafruit_rplidar import RPLidar
+from adafruit_rplidar import RPLidar, RPLidarException
 import pygame
 import time
+import random
 
 W = 600
 H = 600
@@ -42,7 +43,7 @@ def process_data(data):
         distance = data[angle]
         if distance > 0:                  # ignore initially ungathered data points
             # scale maxdistance value to biggest value among current datamax([min([5000, distance]), max_distance]) check unit of distance val
-            max_distance = 100
+            max_distance = 10000
             radians = angle * pi / 180.0
             x = distance * cos(radians)
             y = distance * sin(radians)
@@ -54,17 +55,26 @@ def process_data(data):
 
 scan_data = [0] * 360
 
-try:
-    for scan in lidar.iter_scans():
-        for (_, angle, distance) in scan:
-            scan_data[min([359, floor(angle)])] = distance
-        process_data(scan_data)
+while True:
+    try:
+        for scan in lidar.iter_scans():
+            for (_, angle, distance) in scan:
+                scan_data[min([359, floor(angle)])] = distance
+            process_data(scan_data)
 
-except KeyboardInterrupt:
-    print('Stopping.')
-    lidar.stop()
-    lidar.stop_motor()
-    lidar.disconnect()
+    except RPLidarException as e:
+        print(f"RPLidar Exception: {e}")
+        lidar.stop_motor()
+        lidar.disconnect()
+        time.sleep(random.randrange(0,10)/1000)
+        lidar.connect()
+        lidar.start_motor()
+
+    except KeyboardInterrupt:
+        print('Stopping.')
+        lidar.stop()
+        lidar.stop_motor()
+        lidar.disconnect()
 
 
 # issues:
