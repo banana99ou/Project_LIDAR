@@ -37,6 +37,7 @@ void loop() {
   }
 }
 
+
 void step(String dir, int angle){
   // handle stepper motor
   // takes in dirrection and angle in degrees and keep record of current angle
