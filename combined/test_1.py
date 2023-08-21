@@ -6,6 +6,7 @@ import RPi.GPIO as GPIO
 import time
 import StepModule as homingtest
 import random
+import threading
 
 stepPin = 26  # Y.STEP
 dirPin = 19  # Y.DIR
@@ -68,6 +69,15 @@ def process_data(data):
     # pygame.display.update()
     print(data)
 
+def read_serial_from_module():
+    message = homingtest.read_serial()
+    print("Received from module:", message)
+    if message == "LimitSwitchPressed":
+        raise homingtest.StepperError("Limit switch pressed on Arduino")
+    
+serial_thread = threading.Thread(target=read_serial_from_module)
+serial_thread.start()
+
 homingtest.homing()
 
 scan_data = [0] * 360 
@@ -78,7 +88,7 @@ while True:
         for scan in lidar.iter_scans():
             for (_, angle, distance) in scan:
                 Single_Scan[min([359, floor(angle)])] = distance
-            IsScanEdge = homingtest.StepmotorStep()
+            IsScanEdge = homingtest.StepLoop()
             if IsScanEdge == 1:
                 scan_data.append(Single_Scan)
             elif IsScanEdge == -1:

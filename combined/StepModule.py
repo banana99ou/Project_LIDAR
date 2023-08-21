@@ -1,4 +1,4 @@
-import RPi.GPIO as GPIO
+import serial
 import time
 
 # all angle in terms of step
@@ -7,56 +7,27 @@ import time
 # 50 step = 90
 # 25 step = 45
 # 5 step = 9
+angleNow = 0
+
+SerialArduino = serial.Serial('/dev/ttyACM0', 9600, timeout=5)
 
 class StepperError(Exception):
     '''error'''
 
-stepPin = 26  # Y.STEP
-dirPin = 19  # Y.DIR
-enPin = 13
-HomingPin = 20
-HomingCommon = 21
-stepsPerRev = 200
-pulseWidthMicros = 100  # microseconds 0.0001 second
-millisBtwnSteps = 1000  # 0.001 second
-angleNow = 0
-stepdir = "cw"
-StepToAngle = 360/200
+def step(direction, amount):
+    temp1, temp2 = direction, amount
+    SerialArduino.write(b'step ' + direction + amount + b'\n')
+    response = SerialArduino.read()
+    if response is "Ack Step":
+        pass
+    else:
+        step(temp1, temp2)
 
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(enPin, GPIO.OUT)
-GPIO.output(enPin, GPIO.LOW)
-GPIO.setup(stepPin, GPIO.OUT)
-GPIO.setup(dirPin, GPIO.OUT)
-GPIO.setup(HomingPin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-GPIO.setup(HomingCommon, GPIO.OUT)
-GPIO.output(HomingCommon, GPIO.HIGH)
-
-def step(dir, angle):
-    # handle stepper motor
-    # takes in dirrection and angle in degrees and keep record of current angle
-    if dir == "cw":
-        global angleNow
-        GPIO.output(dirPin, GPIO.HIGH)
-        anglestep = 1 
-    if dir == "ccw":
-        GPIO.output(dirPin, GPIO.LOW)
-        anglestep = -1
-    for i in range(int(angle)):
-        GPIO.output(stepPin, GPIO.HIGH)
-        time.sleep(pulseWidthMicros / 1000000.0)
-        GPIO.output(stepPin, GPIO.LOW)
-        time.sleep(millisBtwnSteps / 100000.0)
-        angleNow += anglestep
-        # print(angleNow * StepToAngle)
-        # time.sleep(0.1)
     
-def StepmotorStep(resolution="fine"): # , ifinit):
+def StepLoop(resolution="fine"): # , ifinit):
     # emergencystop
     # stop and go back few step
     IsScanEdge = "Nan" 
-    if GPIO.input(HomingPin):
-        raise StepperError('Angle Error')
     # set resolution
     global stepdir
     if resolution == "fine":
@@ -77,32 +48,37 @@ def StepmotorStep(resolution="fine"): # , ifinit):
         IsScanEdge = 0 # "Nan"
     # need to add a feature that ties scanning range to certain range
     # print("stepdir: ", stepdir)
+
+    if stepdir == "cw":
+        stepdir = 1
+    elif stepdir == "ccw":
+        stepdir = 0
+
     step(stepdir, resolution)
     return IsScanEdge
+    # return IsScanEdge
 
-def homing():
+def Homing():
+    SerialArduino.write(b'Homing')
+    response = SerialArduino.read()
+    if response is "Ack Homing":
+        pass
+    else:
+        Homing()
+
+def read_serial():
+    global angleNow
     while True:
-        # if homing switch pressed
-        if GPIO.input(HomingPin):
-            global angleNow 
-            angleNow = 75 # 45 degree
-            print("reset")
-            # print(angleNow * StepToAngle)
-            time.sleep(0.5)
-            # turn 180 clockwise to initialize lidar pos
-            # then break
-            # find way to use arduino as driver instead
-            step("cw", 50)
-            time.sleep(1)
-            break
-        # if homing switch not pressed
-        else:
-            # keep turning ccw until switch pressed
-            step("ccw", 1)
+        if SerialArduino.in_waiting > 0:
+            message = SerialArduino.readline().decode()
+            if message.startswith("AngleNow: "):
+                angleNow = int(message.split(":")[1])
+            elif message == "LimitSwitchPressed":
+                return message
 
 if __name__ == "__main__":
-    homing()
+    Homing()
     for i in range(200):
-        StepmotorStep()
+        StepLoop()
         print("stepping")
     print("end")

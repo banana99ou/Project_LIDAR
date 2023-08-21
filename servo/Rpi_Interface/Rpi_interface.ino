@@ -38,12 +38,12 @@ void Step(int dir, int angle){
     digitalWrite(stepPin, LOW);
     delayMicroseconds(millisBtwnSteps);
     angleNow += anglestep;
-    // print(angleNow * StepToAngle)
+    Serial.println("AngleNow: " + String(angleNow));
     // time.sleep(0.1)
   }
 }
     
-int Steploop(int resolution=3){ // , ifinit):
+int StepLoop(int resolution=3){ // , ifinit):
   // emergencystop
   // stop and go back few step
   int IsScanEdge = 0 ;
@@ -111,7 +111,7 @@ void setup() {
 
 void loop() {
   if(digitalRead(limitSwitchPin1) == LOW || digitalRead(limitSwitchPin2) == LOW) {
-    Serial.println("LimitSwitchPressed");
+    Serial.println("RaiseError");
     delay(100);  // Debounce delay
   }
   serialEvent();
@@ -119,6 +119,7 @@ void loop() {
     Serial.println(inputString);
     if(inputString.startsWith("Step")) {
       Serial.println("Ack: Step");
+      delay(100);
       int spaceIndex = inputString.indexOf(' ');
       if(spaceIndex != -1){
         String value = inputString.substring(spaceIndex + 1);
@@ -129,11 +130,13 @@ void loop() {
     }
     if(inputString.startsWith("Homing")) {
       Serial.println("Ack: Homing");
+      delay(100);
       Homing();
     }
-    if(inputString.startsWith("Steploop")) {
-      Serial.println("Ack: Steploop");
-      Steploop();
+    if(inputString.startsWith("StepLoop")) {
+      Serial.println("Ack: StepLoop");
+      delay(100);
+      StepLoop();
     }
     
     inputString = "";

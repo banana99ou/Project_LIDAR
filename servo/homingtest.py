@@ -63,12 +63,12 @@ def StepmotorStep(resolution="fine"): # , ifinit):
         resolution = 1  # == 1,8 degree
     if resolution == "coarse":
         resolution = 5  # == 9 degree
-    if stepdir == "cw" and angleNow >= 125: #225 d
+    if stepdir == "cw" and angleNow >= -25: #225 d
         # if lidar scan range right edge (from lidar's perspective)
         print("CW bound")
         stepdir = "ccw"
         IsScanEdge = 1 # "Right"
-    elif stepdir == "ccw" and angleNow <= 75: # 135 d
+    elif stepdir == "ccw" and angleNow <= 25: # 135 d
         # if lidar scan range left edge
         print("CCW bound")
         stepdir = "cw"
@@ -85,14 +85,14 @@ def homing():
         # if homing switch pressed
         if GPIO.input(HomingPin):
             global angleNow 
-            angleNow = -25 # 45 degree
+            angleNow = 75 # 45 degree
             print("reset")
             # print(angleNow * StepToAngle)
             time.sleep(0.5)
             # turn 180 clockwise to initialize lidar pos
             # then break
             # find way to use arduino as driver instead
-            step("cw", 150)
+            step("cw", 50)
             time.sleep(1)
             break
         # if homing switch not pressed
