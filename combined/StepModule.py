@@ -18,7 +18,7 @@ def step(direction, amount):
     temp1, temp2 = direction, amount
     SerialArduino.write(b'step ' + direction + amount + b'\n')
     response = SerialArduino.read()
-    if response is "Ack Step":
+    if response == "Ack Step":
         pass
     else:
         step(temp1, temp2)
@@ -61,7 +61,7 @@ def StepLoop(resolution="fine"): # , ifinit):
 def Homing():
     SerialArduino.write(b'Homing')
     response = SerialArduino.read()
-    if response is "Ack Homing":
+    if response == "Ack Homing":
         pass
     else:
         Homing()

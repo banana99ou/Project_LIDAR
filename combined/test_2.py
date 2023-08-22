@@ -18,9 +18,9 @@ while True:
     except StepModule.StepperError as e:
         print(f"Stepper Error: {e}")
         StepModule.step(1, 20)
-        print("recallibration")
+        print("recallibrating")
         StepModule.Homing()
-        
+
     except KeyboardInterrupt:
         print('Stopping.')
         break

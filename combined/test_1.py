@@ -78,7 +78,7 @@ def read_serial_from_module():
 serial_thread = threading.Thread(target=read_serial_from_module)
 serial_thread.start()
 
-homingtest.homing()
+homingtest.Homing()
 
 scan_data = [0] * 360 
 Single_Scan = [0] * 360
@@ -105,9 +105,9 @@ while True:
 
     except homingtest.StepperError as e:
         print(f"Stepper Error: {e}")
-        homingtest.step("cw", 20)
-        print("recallibration")
-        homingtest.homing()
+        homingtest.step(1, 20)
+        print("recallibrating")
+        homingtest.Homing()
 
     except KeyboardInterrupt:
         print('Stopping.')
