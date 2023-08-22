@@ -25,6 +25,7 @@ def step(direction, amount):
 
     
 def StepLoop(resolution="fine"): # , ifinit):
+    # ties scanning range to certain range
     # emergencystop
     # stop and go back few step
     IsScanEdge = "Nan" 
@@ -34,19 +35,18 @@ def StepLoop(resolution="fine"): # , ifinit):
         resolution = 1  # == 1,8 degree
     if resolution == "coarse":
         resolution = 5  # == 9 degree
-    if stepdir == "cw" and angleNow >= -25: #225 d
+    if stepdir == "cw" and angleNow >= 125: #225 d
         # if lidar scan range right edge (from lidar's perspective)
         print("CW bound")
         stepdir = "ccw"
         IsScanEdge = 1 # "Right"
-    elif stepdir == "ccw" and angleNow <= 25: # 135 d
+    elif stepdir == "ccw" and angleNow <= 75: # 135 d
         # if lidar scan range left edge
         print("CCW bound")
         stepdir = "cw"
         IsScanEdge = -1 # "left"
     else:
         IsScanEdge = 0 # "Nan"
-    # need to add a feature that ties scanning range to certain range
     # print("stepdir: ", stepdir)
 
     if stepdir == "cw":
@@ -56,7 +56,7 @@ def StepLoop(resolution="fine"): # , ifinit):
 
     step(stepdir, resolution)
     return IsScanEdge
-    # return IsScanEdge
+
 
 def Homing():
     SerialArduino.write(b'Homing')
@@ -65,6 +65,7 @@ def Homing():
         pass
     else:
         Homing()
+
 
 def read_serial():
     global angleNow
@@ -75,6 +76,7 @@ def read_serial():
                 angleNow = int(message.split(":")[1])
             elif message == "LimitSwitchPressed":
                 return message
+
 
 if __name__ == "__main__":
     Homing()

@@ -88,15 +88,15 @@ void Homing() {
       // turn 180 clockwise to initialize lidar pos
       // then break
       // find way to use arduino as driver instead
-      Step(1, 50);
-//      /delay(1);
+      Step(1, 100); // cw 180d
+      // delay(1);
       break;
     }    
     // if homing switch not pressed
     else {
       // keep turning ccw until switch pressed
-      Serial.println("not there yet");
-      Step(0, 1);
+      // Serial.println("not there yet");
+      Step(0, 1); //ccw 1.8d
     }
   }
   Serial.println("HomgComp");
