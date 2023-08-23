@@ -69,14 +69,14 @@ def process_data(data):
     # pygame.display.update()
     print(data)
 
-def read_serial_from_module():
-    message = homingtest.read_serial()
-    print("Received from module:", message)
-    if message == "LimitSwitchPressed":
-        raise homingtest.StepperError("Limit switch pressed on Arduino")
+# def read_serial_from_module():
+#     message = homingtest.read_serial()
+#     print("Received from module:", message)
+#     if message == "LimitSwitchPressed":
+#         raise homingtest.StepperError("Limit switch pressed on Arduino")
     
-serial_thread = threading.Thread(target=read_serial_from_module)
-serial_thread.start()
+# serial_thread = threading.Thread(target=read_serial_from_module)
+# serial_thread.start()
 
 homingtest.Homing()
 
