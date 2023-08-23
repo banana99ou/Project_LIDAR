@@ -38,6 +38,13 @@ void Step(int dir, int angle){
     digitalWrite(stepPin, LOW);
     delayMicroseconds(millisBtwnSteps);
     angleNow += anglestep;
+
+    if(angleNow>199){
+      angleNow = 0;
+    }
+    if(angleNow<0){
+      angleNow = 199;
+    }
     Serial.println("AngleNow: " + String(angleNow));
     // time.sleep(0.1)
   }
@@ -82,7 +89,7 @@ void Homing() {
   while(true){
     // if homing switch pressed
     if(digitalRead(limitSwitchPin1) == LOW){ 
-      angleNow = 75; // 45 degree
+      angleNow = 25; // 45 degree
       Serial.println(angleNow * StepToAngle);
       delay(0.5);
       // turn 180 clockwise to initialize lidar pos
