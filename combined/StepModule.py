@@ -73,8 +73,10 @@ def homing():
     response = SerialArduino.readline().decode('utf-8')
     print('response: ' + str(response))
     if response == "Ack Homing":
+        print("Ack Recieved")
         pass
     else:
+        print("Ack not Recieved")
         homing()
 
 
