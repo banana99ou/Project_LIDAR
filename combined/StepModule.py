@@ -62,8 +62,8 @@ def StepLoop(resolution="fine"): # , ifinit):
 
 def Homing():
     '''Homes stepper motor'''
-    SerialArduino.write(b'Homing')
-    print(b'Homing')
+    SerialArduino.write('Homing')
+    print('Homing')
     response = SerialArduino.read()
     print('response: ' + str(response))
     if response == "Ack Homing":
