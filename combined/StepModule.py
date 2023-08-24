@@ -16,7 +16,7 @@ def initSerial():
 class StepperError(Exception):
     '''error'''
 
-def step(direction, amount):
+def step(direction: int, amount: int):
     temp1, temp2 = direction, amount
     SerialArduino.write(b'step ' + direction + amount + b'\n')
     response = SerialArduino.read()
@@ -27,9 +27,9 @@ def step(direction, amount):
 
     
 def StepLoop(resolution="fine"): # , ifinit):
-    # ties scanning range to certain range
-    # emergencystop
-    # stop and go back few step
+    '''ties scanning range to certain range 
+        emergencystop 
+        stop and go back few step'''
     IsScanEdge = "Nan" 
     # set resolution
     global stepdir
@@ -61,8 +61,11 @@ def StepLoop(resolution="fine"): # , ifinit):
 
 
 def Homing():
+    '''Homes stepper motor'''
     SerialArduino.write(b'Homing')
+    print(b'Homing')
     response = SerialArduino.read()
+    print('response: ' + str(response))
     if response == "Ack Homing":
         pass
     else:
