@@ -26,9 +26,11 @@ def step(direction: int, amount: int):
     print(b'step ' + str(direction).encode() + str(amount).encode() + b'\n')
     response = SerialArduino.readline().decode('utf-8')
     print("response: " + str(response))
-    if "Ack: Step" in response:
+    if "Ack: Homing" in response:
+        print("Ack Recieved")
         pass
     else:
+        print("Ack not Recieved")
         step(temp1, temp2) 
 
     
