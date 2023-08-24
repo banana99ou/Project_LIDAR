@@ -7,7 +7,9 @@ import time
 # 50 step = 90
 # 25 step = 45
 # 5 step = 9
+
 angleNow = 0
+stringComplete = False
 
 def init_serial():
     '''start serial com'''
@@ -22,7 +24,7 @@ def step(direction: int, amount: int):
     temp1, temp2 = direction, amount
     SerialArduino.write(b'step ' + str(direction).encode() + str(amount).encode() + b'\n')
     print(b'step ' + str(direction).encode() + str(amount).encode() + b'\n')
-    response = SerialArduino.read()
+    response = SerialArduino.readline().decode('utf-8')
     print("response: " + str(response))
     if response == "Ack Step":
         pass
@@ -30,7 +32,7 @@ def step(direction: int, amount: int):
         step(temp1, temp2) 
 
     
-def stepLoop(resolution="fine"): # , ifinit):
+def step_loop(resolution="fine"): # , ifinit):
     '''ties scanning range to certain range 
         emergencystop 
         stop and go back few step'''
@@ -64,16 +66,28 @@ def stepLoop(resolution="fine"): # , ifinit):
     return IsScanEdge
 
 
-def Homing():
+def homing():
     '''Homes stepper motor'''
     SerialArduino.write(b'Homing' + b'\n')
     print(b'Homing')
-    response = SerialArduino.read()
+    response = SerialArduino.readline().decode('utf-8')
     print('response: ' + str(response))
     if response == "Ack Homing":
         pass
     else:
-        Homing()
+        homing()
+
+
+def serial_event():
+    global stringComplete
+    response = " "
+    while SerialArduino.available():
+        in_char = chr(SerialArduino.read())
+        response += in_char
+        if in_char == '\n':
+            stringComplete = True
+            break
+    return response
 
 
 def read_serial():

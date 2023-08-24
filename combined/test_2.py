@@ -11,17 +11,18 @@ import StepModule
 # serial_thread.start()
 
 StepModule.init_serial()
-StepModule.Homing()
+print("homing")
+StepModule.homing()
 StepModule.step(0, 25)
 while True:
     try:
-        StepModule.stepLoop()
+        StepModule.step_loop()
     
     except StepModule.StepperError as e:
         print(f"Stepper Error: {e}")
         StepModule.step(1, 20)
         print("recallibrating")
-        StepModule.Homing()
+        StepModule.homing()
 
     except KeyboardInterrupt:
         print('Stopping.')
