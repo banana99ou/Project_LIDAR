@@ -9,7 +9,9 @@ import time
 # 5 step = 9
 angleNow = 0
 
-SerialArduino = serial.Serial('/dev/ttyACM0', 9600, timeout=5)
+def initSerial():
+    global SerialArduino
+    SerialArduino = serial.Serial('/dev/ttyACM0', 9600, timeout=5)
 
 class StepperError(Exception):
     '''error'''
