@@ -20,9 +20,9 @@ int i = 0;
 void Step(int dir, int angle){
   // handle stepper motor
   // takes in dirrection and angle in degrees and keep record of current angle
-  Serial.print(dir);
-  Serial.print(' ');
-  Serial.println(angle);
+  // Serial.print(dir);
+  // Serial.print(' ');
+  // Serial.println(angle);
   int anglestep = 0;
   if(dir == 1){
     digitalWrite(dirPin, HIGH);
