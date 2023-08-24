@@ -27,7 +27,7 @@ def step(direction: int, amount: int):
     if response == "Ack Step":
         pass
     else:
-        step(temp1, temp2)
+        step(temp1, temp2) 
 
     
 def stepLoop(resolution="fine"): # , ifinit):
