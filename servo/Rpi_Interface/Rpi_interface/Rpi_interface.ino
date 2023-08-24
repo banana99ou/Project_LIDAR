@@ -125,7 +125,7 @@ void loop() {
   if(stringComplete) {
     Serial.println(inputString);
     if(inputString.startsWith("Step")) {
-      Serial.println("Ack: Step");
+      Serial.println("Ack: Step\n");
       delay(100);
       int spaceIndex = inputString.indexOf(' ');
       if(spaceIndex != -1){
@@ -136,12 +136,12 @@ void loop() {
       }
     }
     if(inputString.startsWith("Homing")) {
-      Serial.println("Ack: Homing");
+      Serial.println("Ack: Homing\n");
       delay(100);
       Homing();
     }
     if(inputString.startsWith("StepLoop")) {
-      Serial.println("Ack: StepLoop");
+      Serial.println("Ack: StepLoop\n");
       delay(100);
       StepLoop();
     }
