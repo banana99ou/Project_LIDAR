@@ -10,10 +10,11 @@ def read_serial_from_module():
 serial_thread = threading.Thread(target=read_serial_from_module)
 serial_thread.start()
 
-StepModule.Homing()
+StepModule.init_serial()
+StepModule.step(0, 25)
 while True:
     try:
-        StepModule.StepLoop()
+        StepModule.stepLoop()
     
     except StepModule.StepperError as e:
         print(f"Stepper Error: {e}")

@@ -9,7 +9,8 @@ import time
 # 5 step = 9
 angleNow = 0
 
-def initSerial():
+def init_serial():
+    '''start serial com'''
     global SerialArduino
     SerialArduino = serial.Serial('/dev/ttyACM0', 9600, timeout=5)
 
@@ -17,6 +18,7 @@ class StepperError(Exception):
     '''error'''
 
 def step(direction: int, amount: int):
+    '''run motor dir 1=cw 0=ccw amount (in step)'''
     temp1, temp2 = direction, amount
     SerialArduino.write(b'step ' + direction + amount + b'\n')
     response = SerialArduino.read()
@@ -26,7 +28,7 @@ def step(direction: int, amount: int):
         step(temp1, temp2)
 
     
-def StepLoop(resolution="fine"): # , ifinit):
+def stepLoop(resolution="fine"): # , ifinit):
     '''ties scanning range to certain range 
         emergencystop 
         stop and go back few step'''
@@ -62,8 +64,8 @@ def StepLoop(resolution="fine"): # , ifinit):
 
 def Homing():
     '''Homes stepper motor'''
-    SerialArduino.write('Homing')
-    print('Homing')
+    SerialArduino.write(b'Homing')
+    print(b'Homing')
     response = SerialArduino.read()
     print('response: ' + str(response))
     if response == "Ack Homing":
