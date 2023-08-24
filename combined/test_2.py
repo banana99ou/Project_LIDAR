@@ -1,14 +1,14 @@
 import StepModule
-import threading
+# import threading
 
-def read_serial_from_module():
-    message = StepModule.read_serial()
-    print("Received from module:", message)
-    if message == "LimitSwitchPressed":
-        raise StepModule.StepperError("Limit switch pressed on Arduino")
+# def read_serial_from_module():
+#     message = StepModule.read_serial()
+#     print("Received from module:", message)
+#     if message == "LimitSwitchPressed":
+#         raise StepModule.StepperError("Limit switch pressed on Arduino")
 
-serial_thread = threading.Thread(target=read_serial_from_module)
-serial_thread.start()
+# serial_thread = threading.Thread(target=read_serial_from_module)
+# serial_thread.start()
 
 StepModule.init_serial()
 StepModule.step(0, 25)
