@@ -78,6 +78,7 @@ def process_data(data):
 # serial_thread = threading.Thread(target=read_serial_from_module)
 # serial_thread.start()
 
+homingtest.initSerial()
 homingtest.Homing()
 
 scan_data = [0] * 360 
