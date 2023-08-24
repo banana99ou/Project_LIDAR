@@ -22,7 +22,7 @@ class StepperError(Exception):
 def step(direction: int, amount: int):
     '''run motor dir 1=cw 0=ccw amount (in step)'''
     temp1, temp2 = direction, amount
-    SerialArduino.write(b'step ' + str(direction).encode() + str(amount).encode() + b'\n')
+    SerialArduino.write(b'Step ' + str(direction).encode() + str(amount).encode() + b'\n')
     print(b'step ' + str(direction).encode() + str(amount).encode() + b'\n')
     response = SerialArduino.readline().decode('utf-8')
     print("response: " + str(response))
