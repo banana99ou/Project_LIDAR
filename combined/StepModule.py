@@ -21,7 +21,9 @@ def step(direction: int, amount: int):
     '''run motor dir 1=cw 0=ccw amount (in step)'''
     temp1, temp2 = direction, amount
     SerialArduino.write(b'step ' + str(direction).encode() + str(amount).encode() + b'\n')
+    print(b'step ' + str(direction).encode() + str(amount).encode() + b'\n')
     response = SerialArduino.read()
+    print("response: " + str(response))
     if response == "Ack Step":
         pass
     else:
@@ -64,7 +66,7 @@ def stepLoop(resolution="fine"): # , ifinit):
 
 def Homing():
     '''Homes stepper motor'''
-    SerialArduino.write(b'Homing')
+    SerialArduino.write(b'Homing' + b'\n')
     print(b'Homing')
     response = SerialArduino.read()
     print('response: ' + str(response))
