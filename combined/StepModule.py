@@ -65,7 +65,11 @@ def step_loop(resolution="fine"): # , ifinit):
         stepdir = 0
 
     step(stepdir, resolution)
-    return IsScanEdge
+    response = SerialArduino.readline().decode('utf-8')
+    prefix = "AngleNow: "
+    if prefix in response:
+        angleNow = int(response[len(prefix):])
+    return IsScanEdge, angleNow
 
 
 def homing():

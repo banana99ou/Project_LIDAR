@@ -1,12 +1,13 @@
 # import os
-from math import cos, sin, pi, floor
+# from math import cos, sin, pi, floor
+import math
 from adafruit_rplidar import RPLidar,RPLidarException
-import RPi.GPIO as GPIO
+# import RPi.GPIO as GPIO
 # import pygame
 import time
-import StepModule as homingtest
+import StepModule as StepModule
 import random
-import threading
+# import threading
 
 stepPin = 26  # Y.STEP
 dirPin = 19  # Y.DIR
@@ -18,11 +19,11 @@ millisBtwnSteps = 1000  # 0.001 second
 angleNow = 0
 stepdir = "cw"
 
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(enPin, GPIO.OUT)
-GPIO.output(enPin, GPIO.LOW)
-GPIO.setup(stepPin, GPIO.OUT)
-GPIO.setup(dirPin, GPIO.OUT)
+# GPIO.setmode(GPIO.BCM)
+# GPIO.setup(enPin, GPIO.OUT)
+# GPIO.output(enPin, GPIO.LOW)
+# GPIO.setup(stepPin, GPIO.OUT)
+# GPIO.setup(dirPin, GPIO.OUT)
 
 # W = 600
 # H = 600
@@ -46,7 +47,8 @@ max_distance = 0
 
 
 def process_data(data):
-    global max_distance
+    '''process data'''
+    # global max_distance
     # lcd.fill((0, 0, 0))
     # point = (int(W / 2), int(H / 2))
 
@@ -70,26 +72,26 @@ def process_data(data):
     print(data)
 
 # def read_serial_from_module():
-#     message = homingtest.read_serial()
+#     message = StepModule.read_serial()
 #     print("Received from module:", message)
 #     if message == "LimitSwitchPressed":
-#         raise homingtest.StepperError("Limit switch pressed on Arduino")
-    
+#         raise StepModule.StepperError("Limit switch pressed on Arduino")
+#
 # serial_thread = threading.Thread(target=read_serial_from_module)
 # serial_thread.start()
 
-homingtest.initSerial()
-homingtest.Homing()
+StepModule.init_serial()
+StepModule.homing()
 
-scan_data = [0] * 360 
+scan_data = [0] * 360
 Single_Scan = [0] * 360
 
 while True:
     try:
         for scan in lidar.iter_scans():
             for (_, angle, distance) in scan:
-                Single_Scan[min([359, floor(angle)])] = distance
-            IsScanEdge = homingtest.StepLoop()
+                Single_Scan[min([359, math.floor(angle)])] = distance
+            IsScanEdge, angleNow = StepModule.step_loop()
             if IsScanEdge == 1:
                 scan_data.append(Single_Scan)
             elif IsScanEdge == -1:
@@ -104,11 +106,11 @@ while True:
         lidar.connect()
         lidar.start_motor()
 
-    except homingtest.StepperError as e:
+    except StepModule.StepperError as e:
         print(f"Stepper Error: {e}")
-        homingtest.step(1, 20)
+        StepModule.step(1, 20)
         print("recallibrating")
-        homingtest.Homing()
+        StepModule.homing()
 
     except KeyboardInterrupt:
         print('Stopping.')
@@ -150,7 +152,8 @@ lidar.disconnect()
 #     return angleNow
 
 
-# def homing():
+# def homing()
+#:
 #     while True:
 #         # if homing switch pressed
 #         if (GPIO.input(homingPin) == 1):
