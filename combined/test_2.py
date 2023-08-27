@@ -11,9 +11,9 @@ import StepModule
 # serial_thread.start()
 
 StepModule.init_serial()
-print("homing")
-StepModule.homing()
-StepModule.step(0, 25)
+print("step")
+# StepModule.homing()
+# StepModule.step(0, 25)
 # while True:
 #     try:
 #         StepModule.step_loop()
