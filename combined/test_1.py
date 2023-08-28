@@ -92,10 +92,7 @@ while True:
             for (_, angle, distance) in scan:
                 Single_Scan[min([359, math.floor(angle)])] = distance
             IsScanEdge, angleNow = StepModule.step_loop()
-            if IsScanEdge == 1:
-                scan_data.append(Single_Scan)
-            elif IsScanEdge == -1:
-                scan_data.append(Single_Scan[::-1])
+            scan_data.insert(angleNow, Single_Scan)
         process_data(scan_data)
 
     except RPLidarException as e:
