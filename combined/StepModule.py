@@ -10,6 +10,7 @@ import time
 
 angleNow = 0
 stringComplete = False
+stepdir = 0
 
 def init_serial():
     '''start serial com'''
@@ -41,6 +42,7 @@ def step_loop(resolution="fine"): # , ifinit):
     IsScanEdge = "Nan" 
     # set resolution
     global stepdir
+    global angleNow
     if resolution == "fine":
         resolution = 1  # == 1,8 degree
     if resolution == "coarse":
