@@ -25,7 +25,7 @@ StepModule.step(0, 25)
 #         StepModule.step(1, 20)
 #         print("recallibrating")
 #         StepModule.homing()
-# 
-    # except KeyboardInterrupt:
-        print('Stopping.')
-        break
+#
+#    except KeyboardInterrupt:
+#        print('Stopping.')
+#        break
