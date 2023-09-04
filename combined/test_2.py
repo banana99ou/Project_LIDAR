@@ -11,14 +11,14 @@ import StepModule
 # serial_thread.start()
 
 StepModule.init_serial()
-print("homing")
+print("test2: homing")
 StepModule.homing()
-print("step")
+print("test2: step")
 StepModule.step(0, 25)
 while True:
     try:
         StepModule.step_loop()
-    
+
 #     except StepModule.StepperError as e:
 #         print(f"Stepper Error: {e}")
 #         StepModule.step(1, 20)
