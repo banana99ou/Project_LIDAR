@@ -80,15 +80,23 @@ def homing():
     print(b'Homing')
     response = SerialArduino.readline().decode('utf-8')
     print('response: ' + str(response))
+    # read Ack statement from arduino and try again if ack not recieved
     if "Ack: Homing" in response:
         print("Ack Recieved")
-        pass
+        # wait until homing complete messege
+        while True:
+            response = SerialArduino.readline().decode('utf-8')
+            print('response: ' + str(response))
+            if "HomgComp" in response:
+                print("homing comp")
+                break
     else:
         print("Ack not Recieved")
         homing()
 
 
 def serial_event():
+    '''deprected'''
     global stringComplete
     response = " "
     while SerialArduino.available():
@@ -101,13 +109,14 @@ def serial_event():
 
 
 def read_serial():
+    '''read serial from arduino'''
     global angleNow
     while True:
         if SerialArduino.in_waiting > 0:
             message = SerialArduino.readline().decode()
             if message.startswith("AngleNow: "):
                 angleNow = int(message.split(":")[1])
-            elif message == "LimitSwitchPressed":
+            elif "LimitSwitchPressed" in message:
                 return message
 
 
