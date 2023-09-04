@@ -46,7 +46,7 @@ void Step(int dir, int angle){
     if(angleNow<0){
       angleNow = 199;
     }
-    // Serial.println("AngleNow: " + String(angleNow));
+    Serial.println("AngleNow: " + String(angleNow));
     // time.sleep(0.1)
   }
 }
