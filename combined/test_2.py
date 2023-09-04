@@ -1,6 +1,8 @@
 import StepModule
 import threading
 
+
+StepModule.init_serial()
 def read_serial_from_module():
     while True:
         while True:
@@ -11,7 +13,6 @@ def read_serial_from_module():
 serial_thread = threading.Thread(target=read_serial_from_module)
 serial_thread.start()
 
-StepModule.init_serial()
 # print("test2: homing")
 # StepModule.homing()
 print("test2: step")
