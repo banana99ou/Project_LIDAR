@@ -112,8 +112,8 @@ def read_serial():
 
 
 if __name__ == "__main__":
-    Homing()
+    homing()
     for i in range(200):
-        StepLoop()
+        step_loop()
         print("stepping")
     print("end")
