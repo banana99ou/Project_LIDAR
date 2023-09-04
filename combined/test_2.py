@@ -13,8 +13,8 @@ def read_serial_from_module():
 serial_thread = threading.Thread(target=read_serial_from_module)
 serial_thread.start()
 
-# print("test2: homing")
-# StepModule.homing()
+print("test2: homing")
+StepModule.homing()
 print("test2: step")
 StepModule.step(0, 25)
 # while True:
