@@ -1,14 +1,15 @@
 import StepModule
-# import threading
+import threading
 
-# def read_serial_from_module():
-#     message = StepModule.read_serial()
-#     print("Received from module:", message)
-#     if message == "LimitSwitchPressed":
-#         raise StepModule.StepperError("Limit switch pressed on Arduino")
-
-# serial_thread = threading.Thread(target=read_serial_from_module)
-# serial_thread.start()
+def read_serial_from_module():
+    while True:
+        while True:
+            if StepModule.SerialArduino.in_waiting > 0:
+                message = StepModule.SerialArduino.readline().decode()
+                print(message)
+        
+serial_thread = threading.Thread(target=read_serial_from_module)
+serial_thread.start()
 
 StepModule.init_serial()
 print("test2: homing")
