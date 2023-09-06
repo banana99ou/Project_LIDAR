@@ -25,8 +25,8 @@ def step(direction: int, amount: int):
     temp1, temp2 = direction, amount
     SerialArduino.write(b'Step ' + str(direction).encode() + str(amount).encode() + b'\n')
     print(b'Step ' + str(direction).encode() + str(amount).encode() + b'\n')
+    
     num_lines_to_read = 3  # Modify this value as needed
-
     for _ in range(num_lines_to_read):
         response = SerialArduino.readline().decode('utf-8')
         print("response: " + str(response))
