@@ -1,10 +1,13 @@
-const int stepYPin = 3; //Y.STEP
-const int dirYPin = 6; // Y.DIR
-const int enPin=8;
-int stepPin=stepYPin;
-int dirPin=dirYPin;
-const int stepsPerRev=200;
-int pulseWidthMicros = 100; 	// microseconds
+const int stepPin = 3;          // Change this to your actual pin
+const int dirPin = 6;           // Change this to your actual pin
+const int limitSwitchPin1 = 10;  // Change this to your first limit switch pin
+const int limitSwitchPin2 = 11;  // Change this to your second limit switch pin
+int finePin = 10;
+int coarsePin = 11;
+const int enPin = 8;
+const float StepsPerDegree = 0.5555555556;
+const int stepsPerRev = 200;
+int pulseWidthMicros = 100;   // microseconds
 int millisBtwnSteps = 1000;
 void setup() {
  	Serial.begin(9600);

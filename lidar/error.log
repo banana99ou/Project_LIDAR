@@ -1,0 +1,15 @@
+line 270, in _read_descriptor
+    raise RPLidarException("Incorrect descriptor starting bytes")
+adafruit_rplidar.RPLidarException: Incorrect descriptor starting bytes
+
+line 99, in _process_scan
+    raise RPLidarException("New scan flags mismatch")
+adafruit_rplidar.RPLidarException: New scan flags mismatch
+
+line 268, in _read_descriptor
+    raise RPLidarException("Descriptor length mismatch")
+adafruit_rplidar.RPLidarException: Descriptor length mismatch
+
+line 102, in _process_scan
+    raise RPLidarException("Check bit not equal to 1")
+adafruit_rplidar.RPLidarException: Check bit not equal to 1
