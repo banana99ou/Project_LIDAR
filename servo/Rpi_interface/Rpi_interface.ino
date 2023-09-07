@@ -17,12 +17,20 @@ String inputString;
 int i = 0;
 
 
-void Step(int dir, int angle){
+void Step(int angle, int dir=1){
   // handle stepper motor
-  // takes in dirrection and angle in degrees and keep record of current angle
-  // Serial.print(dir);
-  // Serial.print(' ');
-  // Serial.println(angle);
+  // takes in angle in steps and go to that absolute position
+
+  int e = angleNow - angle;
+  if(e >= 0){
+    dir = 0;
+  }
+  else if(e < 0){
+    dir = 1;
+  }
+  e = abs(e);
+  Serial.println(e);
+
   int anglestep = 0;
   if(dir == 1){
     digitalWrite(dirPin, HIGH);
@@ -32,58 +40,29 @@ void Step(int dir, int angle){
     digitalWrite(dirPin, LOW);
     anglestep = -1;
   }
-  for(i=0; i<angle; i++){
-    digitalWrite(stepPin, HIGH);
-    delayMicroseconds(pulseWidthMicros);
-    digitalWrite(stepPin, LOW);
-    delayMicroseconds(millisBtwnSteps);
-    delayMicroseconds(100000);
-    angleNow += anglestep;
 
-    if(angleNow>199){
-      angleNow = 0;
+  if(e != 0){
+    for(i=0; i<e; i++){
+      digitalWrite(stepPin, HIGH);
+      delayMicroseconds(pulseWidthMicros);
+      digitalWrite(stepPin, LOW);
+      delayMicroseconds(millisBtwnSteps);
+      delay(100);
+      angleNow += anglestep;
+  
+      if(angleNow>199){
+        angleNow = 0;
+      }
+      if(angleNow<0){
+        angleNow = 199;
+      }
+      Serial.println("AngleNow: " + String(angleNow));
+      // time.sleep(0.1)
     }
-    if(angleNow<0){
-      angleNow = 199;
-    }
-    Serial.println("AngleNow: " + String(angleNow));
-    // time.sleep(0.1)
   }
-}
-    
-int StepLoop(int resolution=3){ // , ifinit):
-  // emergencystop
-  // stop and go back few step
-  int IsScanEdge = 0 ;
-  if(digitalRead(limitSwitchPin1) == true){
-//   /raise StepperError('Angle Error');
-  }
-  // set resolution
-  // if(resolution == "fine"){
-  //   resolution = 1  // == 1,8 degree
-  // }
-  // if(resolution == "coarse"){
-  //   resolution = 5  // == 9 degree
-  // }
-  if(stepdir == 1 and angleNow >= -25){ // 225 d
-    // if lidar scan range right edge (from lidar's perspective)
-    Serial.println("CW bound");
-    stepdir = 0; //ccw
-    IsScanEdge = 1; // "Right"
-  }
-  else if(stepdir == 0 and angleNow <= 25){ // 135 d
-    // if lidar scan range l{eft edge
-    Serial.println("CCW bound");
-    stepdir = 1; // "cw"
-    IsScanEdge = -1; // "left"
-  }
-  else {
-    IsScanEdge = 0; // "Nan"
-    // need to add a feature that ties scanning range to certain range
-    // print("stepdir: ", stepdir)
-    Step(stepdir, resolution);
-    return IsScanEdge;
-  }
+
+  Serial.println("Job Step finished");
+  Serial.println("AngleNow: " + String(angleNow));
 }
 
 void Homing() {
@@ -96,7 +75,7 @@ void Homing() {
       // turn 180 clockwise to initialize lidar pos
       // then break
       // find way to use arduino as driver instead
-      Step(1, 100); // cw 180d
+      Step(125); // cw 180d
       // delay(1);
       break;
     }    
@@ -104,7 +83,7 @@ void Homing() {
     else {
       // keep turning ccw until switch pressed
       // Serial.println("not there yet");
-      Step(0, 1); //ccw 1.8d
+      Step(angleNow-1); //ccw 1.8d
     }
   }
   Serial.println("HomgComp");
@@ -129,11 +108,14 @@ void loop() {
       Serial.println("Ack: Step");
       delay(100);
       int spaceIndex = inputString.indexOf(' ');
-      if(spaceIndex != -1){
-        String value = inputString.substring(spaceIndex + 1);
-        int direction = value.charAt(0) - '0';
-        int amount = value.substring(1).toInt();
-        Step(direction, amount);
+      if (spaceIndex > 0) {
+        String directionString = inputString.substring(spaceIndex + 1, spaceIndex + 2);
+        int direction = directionString.toInt();
+        
+        String amountString = inputString.substring(spaceIndex + 3);
+        int amount = amountString.toInt();
+        
+        Step(amount, direction);
       }
     }
     if(inputString.startsWith("Homing")) {
