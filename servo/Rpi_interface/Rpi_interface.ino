@@ -104,18 +104,22 @@ void loop() {
   serialEvent();
   if(stringComplete) {
     Serial.println(inputString);
-    if(inputString.startsWith("Step")) {
-      Serial.println("Ack: Step");
-      delay(100);
-      int spaceIndex = inputString.indexOf(' ');
-      if (spaceIndex > 0) {
-        String directionString = inputString.substring(spaceIndex + 1, spaceIndex + 2);
-        int direction = directionString.toInt();
-        
-        String amountString = inputString.substring(spaceIndex + 3);
-        int amount = amountString.toInt();
-        
-        Step(amount, direction);
+    if (spaceIndex1 != -1) {
+      String directionValue = inputString.substring(spaceIndex1 + 1);
+      int spaceIndex2 = directionValue.indexOf(' ');
+
+      // Check if there's a second space (for the second parameter)
+      if (spaceIndex2 != -1) {
+        String directionStr = directionValue.substring(0, spaceIndex2);
+        String amountStr = directionValue.substring(spaceIndex2 + 1);
+
+        int direction = directionStr.toInt();
+        int amount = amountStr.toInt();
+        Step(direction, amount);
+      } else {
+        // If there's no second space, assume only one parameter
+        int direction = directionValue.toInt();
+        Step(direction);
       }
     }
     if(inputString.startsWith("Homing")) {
