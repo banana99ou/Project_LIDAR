@@ -106,7 +106,6 @@ void loop() {
     Serial.println(inputString);
     if(inputString.startsWith("Step")) {
       Serial.println("Ack: Step");
-      delay(100);
       int spaceIndex = inputString.indexOf(' ');
       if (spaceIndex > 0) {
         String directionString = inputString.substring(spaceIndex + 1, spaceIndex + 2);
