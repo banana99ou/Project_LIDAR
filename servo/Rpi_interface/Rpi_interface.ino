@@ -28,8 +28,9 @@ void Step(int angle, int dir=1){
   else if(e < 0){
     dir = 1;
   }
-  e = abs(e);
+  Serial.println(angle);
   Serial.println(e);
+  e = abs(e);
 
   int anglestep = 0;
   if(dir == 1){
