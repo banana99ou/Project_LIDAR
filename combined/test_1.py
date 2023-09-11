@@ -91,7 +91,7 @@ while True:
         for scan in lidar.iter_scans():
             for (_, angle, distance) in scan:
                 Single_Scan[min([359, math.floor(angle)])] = distance
-            IsScanEdge, angleNow = StepModule.step_loop()
+            angleNow = StepModule.step_loop()
             scan_data.insert(angleNow, Single_Scan)
         process_data(scan_data)
 
