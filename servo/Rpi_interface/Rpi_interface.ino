@@ -107,16 +107,8 @@ void loop() {
     Serial.println(inputString);
     if(inputString.startsWith("Step")) {
       Serial.println("Ack: Step");
-      int spaceIndex = inputString.indexOf(' ');
-      if (spaceIndex > 0) {
-        String directionString = inputString.substring(spaceIndex + 1, spaceIndex + 2);
-        int direction = directionString.toInt();
-        
-        String amountString = inputString.substring(spaceIndex + 3);
-        int amount = amountString.toInt();
-        
-        Step(amount, direction);
-      }
+      int amount = inputString.substring(5).toInt();
+      Step(amount);
     }
     if(inputString.startsWith("Homing")) {
       Serial.println("Ack: Homing");
