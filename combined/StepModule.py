@@ -20,11 +20,12 @@ def init_serial():
 class StepperError(Exception):
     '''error'''
 
-def step(direction: int, amount: int):
+def step(amount: int, direction: int=1):
     '''run motor dir 1=cw 0=ccw amount (in step)'''
-    temp1, temp2 = direction, amount
-    SerialArduino.write(b'Step ' + str(direction).encode() + str(amount).encode() + b'\n')
-    print(b'Step ' + str(direction).encode() + str(amount).encode() + b'\n')
+    temp1 = amount
+    temp2 = direction
+    SerialArduino.write(b'Step ' + str(amount).encode() + str(direction).encode() + b'\n')
+    print(b'Step ' + str(amount).encode() + str(direction).encode() + b'\n')
     
     num_lines_to_read = 3  # Modify this value as needed
     for _ in range(num_lines_to_read):
@@ -35,9 +36,7 @@ def step(direction: int, amount: int):
             return
         else:
             print("Ack not Received")
-
     step(temp1, temp2)
-
     
 def step_loop(resolution="fine"): # , ifinit):
     '''ties scanning range to certain range 
@@ -70,7 +69,7 @@ def step_loop(resolution="fine"): # , ifinit):
     elif stepdir == "ccw":
         stepdir = 0
 
-    step(stepdir, resolution)
+    step(resolution)
     response = SerialArduino.readline().decode('utf-8')
     prefix = "AngleNow: "
     if prefix in response:
