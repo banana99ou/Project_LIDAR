@@ -14,7 +14,7 @@ StepModule.init_serial()
 
 # print("test2: homing")
 # StepModule.homing()
-#print("test2: step")
+# print("test2: step")
 # StepModule.step(125)
 # StepModule.angleNow = 125
 # StepModule.prev_angle = StepModule.angleNow

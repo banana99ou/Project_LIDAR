@@ -48,7 +48,7 @@ void Step(int angle, int dir=1){
       delayMicroseconds(pulseWidthMicros);
       digitalWrite(stepPin, LOW);
       delayMicroseconds(millisBtwnSteps);
-      delay(100);
+      delay(10);
       angleNow += anglestep;
   
       if(angleNow>199){

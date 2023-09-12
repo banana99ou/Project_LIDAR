@@ -16,22 +16,25 @@ stepdir = 0
 def init_serial():
     '''start serial com'''
     global SerialArduino
-    SerialArduino = serial.Serial('/dev/ttyACM0', 9600, timeout=2)
+    SerialArduino = serial.Serial('/dev/ttyACM0', 9600, timeout=0.5)
+    # global angleNow
+    # angleNow = 125
 
 class StepperError(Exception):
     '''error'''
 
 def step(amount: int, direction: int=1):
     '''run motor dir 1=cw 0=ccw amount (in step)'''
+    print("step")
     temp1 = amount
     temp2 = direction
     SerialArduino.write(b'Step ' + str(amount).encode() +b'\n')#+ str(direction).encode() + b'\n')
-    print(b'Step ' + str(amount).encode() + b'\n')
+    # print(b'Step ' + str(amount).encode() + b'\n')
     
     response = ''
     for i in range(3):
         response += SerialArduino.readline().decode('utf-8')
-    print('response: ' + str(response))
+    # print('response: ' + str(response))
     if "Ack: Step" in response:
         print("Ack Received")
         return
@@ -43,21 +46,31 @@ def step_loop(resolution="fine"): # , ifinit):
     '''ties scanning range to certain range 
         emergencystop 
         stop and go back few step'''
-    
+    print("step_loop")
     if resolution == "fine":
         resolution = 1  # == 1,8 degree
     if resolution == "coarse":
         resolution = 5  # == 9 degree
     global prev_angle
     global angleNow
-    if(((angleNow - prev_angle) > 0) and (angleNow <= 125)):
-        step(angleNow + resolution)
     if(angleNow >= 125):
-        step(angleNow - resolution)
-    if(((angleNow + prev_angle) > 0) and (angleNow >= 75)):
-        step(angleNow - resolution)
-    if(angleNow <= 75):
-        step(angleNow + resolution)
+        delta = resolution*-1
+        print(resolution)
+        print(delta)
+        print("right bound")
+        # resolution should < 0
+    elif(angleNow <= 75):
+        print("left bound")
+        delta = resolution * 1
+        # resolution should > 0
+    else:
+        if((prev_angle-angleNow) > 0):
+            delta = -1
+        if((prev_angle-angleNow) < 0):
+            delta = 1
+    print(angleNow)
+    print("step " + str(angleNow + delta))
+    step(angleNow + delta)
     prev_angle = angleNow
     response = ''
     for i in range(3):
@@ -69,7 +82,7 @@ def step_loop(resolution="fine"): # , ifinit):
         for line in lines:
             if "AngleNow: " in line:
                 angleNow = int(line[len("AngleNow: "):])
-                print("angleNow saved" + str(angleNow))
+                print("angleNow saved: " + str(angleNow))
     return angleNow
 
     # IsScanEdge = "Nan" 
