@@ -3,3 +3,5 @@
 
 2. now step_loop() should handle sensors range binding
     read angleNow and make sure it goes there
+
+3. make homing work
