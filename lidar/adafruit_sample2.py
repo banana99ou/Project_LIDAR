@@ -25,7 +25,7 @@ while True:
         print(f"RPLidar Exception: {e}")
         lidar.stop_motor()
         lidar.disconnect()
-        time.sleep(random.randrange(0,1)/100)
+        time.sleep(random.randrange(0,1)/1000)
         lidar.connect()
         lidar.start_motor()
 
