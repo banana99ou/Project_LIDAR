@@ -28,8 +28,8 @@ void Step(int angle, int dir=1){
   else if(e < 0){
     dir = 1;
   }
-  Serial.println(angle);
-  Serial.println(e);
+  // Serial.println(angle);
+  // Serial.println(e);
   e = abs(e);
 
   int anglestep = 0;
@@ -57,11 +57,10 @@ void Step(int angle, int dir=1){
       if(angleNow<0){
         angleNow = 199;
       }
-      Serial.println("AngleNow: " + String(angleNow));
-      // time.sleep(0.1)
+      // Serial.println("AngleNow: " + String(angleNow));
+      delay(0.1);
     }
   }
-
   Serial.println("Job Step finished");
   Serial.println("AngleNow: " + String(angleNow));
 }

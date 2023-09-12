@@ -8,6 +8,7 @@ import time
 # 25 step = 45
 # 5 step = 9
 
+prev_angle = 0
 angleNow = 0
 stringComplete = False
 stepdir = 0
@@ -15,7 +16,7 @@ stepdir = 0
 def init_serial():
     '''start serial com'''
     global SerialArduino
-    SerialArduino = serial.Serial('/dev/ttyACM0', 9600, timeout=5)
+    SerialArduino = serial.Serial('/dev/ttyACM0', 9600, timeout=2)
 
 class StepperError(Exception):
     '''error'''
@@ -24,64 +25,86 @@ def step(amount: int, direction: int=1):
     '''run motor dir 1=cw 0=ccw amount (in step)'''
     temp1 = amount
     temp2 = direction
-    SerialArduino.write(b'Step ' + str(amount).encode() + str(direction).encode() + b'\n')
-    print(b'Step ' + str(amount).encode() + str(direction).encode() + b'\n')
+    SerialArduino.write(b'Step ' + str(amount).encode() +b'\n')#+ str(direction).encode() + b'\n')
+    print(b'Step ' + str(amount).encode() + b'\n')
     
-    num_lines_to_read = 3  # Modify this value as needed
-    for _ in range(num_lines_to_read):
-        response = SerialArduino.readline().decode('utf-8')
-        print("response: " + str(response))
-        if "Ack: Step" in response:
-            print("Ack Received")
-            return
-        else:
-            print("Ack not Received")
-    step(temp1, temp2)
+    response = ''
+    for i in range(3):
+        response += SerialArduino.readline().decode('utf-8')
+    print('response: ' + str(response))
+    if "Ack: Step" in response:
+        print("Ack Received")
+        return
+    else:
+        print("Ack not Received")
+        step(temp1, temp2)
     
 def step_loop(resolution="fine"): # , ifinit):
     '''ties scanning range to certain range 
         emergencystop 
         stop and go back few step'''
-    IsScanEdge = "Nan" 
-    # set resolution
-    global stepdir
-    global angleNow
+    
     if resolution == "fine":
         resolution = 1  # == 1,8 degree
     if resolution == "coarse":
         resolution = 5  # == 9 degree
-    if stepdir == "cw" and angleNow >= 125: #225 d
-        # if lidar scan range right edge (from lidar's perspective)
-        print("CW bound")
-        stepdir = "ccw"
-        IsScanEdge = 1 # "Right"
-    elif stepdir == "ccw" and angleNow <= 75: # 135 d
-        # if lidar scan range left edge
-        print("CCW bound")
-        stepdir = "cw"
-        IsScanEdge = -1 # "left"
-    else:
-        IsScanEdge = 0 # "Nan"
-    # print("stepdir: ", stepdir)
-
-    if stepdir == "cw":
-        stepdir = 1
-    elif stepdir == "ccw":
-        stepdir = 0
-
-    step(resolution)
-    response = SerialArduino.readline().decode('utf-8')
+    global prev_angle
+    global angleNow
+    if(((angleNow - prev_angle) > 0) and (angleNow <= 125)):
+        step(angleNow + resolution)
+    if(angleNow >= 125):
+        step(angleNow - resolution)
+    if(((angleNow + prev_angle) > 0) and (angleNow >= 75)):
+        step(angleNow - resolution)
+    if(angleNow <= 75):
+        step(angleNow + resolution)
+    prev_angle = angleNow
+    response = ''
+    for i in range(3):
+        response += SerialArduino.readline().decode('utf-8')
+    print('response: ' + str(response))
     prefix = "AngleNow: "
     if prefix in response:
-        angleNow = int(response[len(prefix):])
-    return IsScanEdge, angleNow
+        lines = response.split('\n')
+        for line in lines:
+            if "AngleNow: " in line:
+                angleNow = int(line[len("AngleNow: "):])
+                print("angleNow saved" + str(angleNow))
+    return angleNow
 
+    # IsScanEdge = "Nan" 
+    # # set resolution
+    # global stepdir
+    # global angleNow
+    
+    # if stepdir == "cw" and angleNow >= 125: #225 d
+    #     # if lidar scan range right edge (from lidar's perspective)
+    #     print("CW bound")
+    #     stepdir = "ccw"
+    #     IsScanEdge = 1 # "Right"
+    # elif stepdir == "ccw" and angleNow <= 75: # 135 d
+    #     # if lidar scan range left edge
+    #     print("CCW bound")
+    #     stepdir = "cw"
+    #     IsScanEdge = -1 # "left"
+    # else:
+    #     IsScanEdge = 0 # "Nan"
+    # # print("stepdir: ", stepdir)
 
+    # if stepdir == "cw":
+    #     stepdir = 1
+    # elif stepdir == "ccw":
+    #     stepdir = 0
+
+    # step(resolution)
+  
 def homing():
     '''Homes stepper motor'''
     SerialArduino.write(b'Homing' + b'\n')
     print(b'Homing')
-    response = SerialArduino.readline().decode('utf-8')
+    response = ''
+    for i in range(3):
+        response += SerialArduino.readline().decode('utf-8')
     print('response: ' + str(response))
     # read Ack statement from arduino and try again if ack not recieved
     if "Ack: Homing" in response:
