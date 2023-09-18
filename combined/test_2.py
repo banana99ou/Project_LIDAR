@@ -1,6 +1,9 @@
 import StepModule
 import threading
 
+angleNow = 125
+prev_angle = 0
+
 StepModule.init_serial()
 # def read_serial_from_module():
 #     while True:
@@ -12,15 +15,11 @@ StepModule.init_serial()
 # serial_thread = threading.Thread(target=read_serial_from_module)
 # serial_thread.start()
 
-# print("test2: homing")
-# StepModule.homing()
-# print("test2: step")
-# StepModule.step(125)
-# StepModule.angleNow = 125
-# StepModule.prev_angle = StepModule.angleNow
+StepModule.homing()
+
 while True:
     try:
-        StepModule.step_loop()
+        angleNow, prev_angle = StepModule.step_loop(resolution="fine", angleNow=angleNow, prev_angle=prev_angle)
 
     except StepModule.StepperError as e:
         print(f"Stepper Error: {e}")
