@@ -12,7 +12,8 @@ def process_data(data):
     print(data)
 
 scan_data = [0]*360
-
+lidar.stop()
+lidar.stop_motor()
 while True:
     try:
         for scan in lidar.iter_scans():

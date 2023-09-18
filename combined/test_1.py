@@ -16,7 +16,8 @@ homingPin = 4  # placeholderplaceholderplaceholderplaceholderplaceholderplacehol
 stepsPerRev = 200
 pulseWidthMicros = 100  # microseconds 0.0001 second
 millisBtwnSteps = 1000  # 0.001 second
-angleNow = 0
+angleNow = 125
+prev_angle = 0
 stepdir = "cw"
 
 # GPIO.setmode(GPIO.BCM)
@@ -91,7 +92,7 @@ while True:
         for scan in lidar.iter_scans():
             for (_, angle, distance) in scan:
                 Single_Scan[min([359, math.floor(angle)])] = distance
-            angleNow = StepModule.step_loop()
+            angleNow, prev_angle = StepModule.step_loop(resolution="fine", angleNow=angleNow, prev_angle=prev_angle)
             scan_data.insert(angleNow, Single_Scan)
         process_data(scan_data)
 
@@ -99,7 +100,7 @@ while True:
         print(f"RPLidar Exception: {e}")
         lidar.stop_motor()
         lidar.disconnect()
-        time.sleep(random.randrange(0,10)/10)  # Add a small delay before reconnecting to the sensor
+        time.sleep(0.07)  # Add a small delay before reconnecting to the sensor
         lidar.connect()
         lidar.start_motor()
 
@@ -164,29 +165,3 @@ lidar.disconnect()
 #         else:
 #             # keep turning ccw until switch pressed
 #             step("ccw", 1.8)
-
-
-# issues:
-# .stop() sends stop byte to lidar so chekc what stop byte should be in doc
-# and discriptor length
-# intergrate stepper motor
-# edit cad to have homing switch
-# lidar resolution seems to be bit low check it and find way to increase resolution.
-# it could be done by limiting max distance value from lidar
-# check if mountplate is blocking los to lower angle of lidar
-# move this line to github issue page or readme.md file
-
-# milestone
-# get lidar working (done)
-# get mount printed (done)
-# get stepper motor working
-# ㄴneed to fix vibration issue
-# ㄴneed to find a way to removed sleep function
-#  ㄴuse arduino as driver
-#  ㄴsepeate program(big issue) or routine
-#  ㄴsome other way
-# get stepper and lidar working together
-# data processing
-
-# idea:
-# find milestone management program/website

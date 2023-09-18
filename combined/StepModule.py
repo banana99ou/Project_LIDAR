@@ -17,6 +17,7 @@ def init_serial():
     '''start serial com'''
     global SerialArduino
     SerialArduino = serial.Serial('/dev/ttyACM0', 9600, timeout=0.5)
+    delta = 0
     # global angleNow
     # angleNow = 125
 
@@ -31,18 +32,18 @@ def step(amount: int, direction: int=1):
     SerialArduino.write(b'Step ' + str(amount).encode() +b'\n')#+ str(direction).encode() + b'\n')
     # print(b'Step ' + str(amount).encode() + b'\n')
     
-    response = ''
-    for i in range(3):
-        response += SerialArduino.readline().decode('utf-8')
-    # print('response: ' + str(response))
-    if "Ack: Step" in response:
-        print("Ack Received")
-        return
-    else:
-        print("Ack not Received")
-        step(temp1, temp2)
+    # response = ''
+    # for i in range(2):
+    #     response += SerialArduino.readline().decode('utf-8')
+    # # print('response: ' + str(response))
+    # if "Ack: Step" in response:
+    #     print("Ack Received")
+    #     return
+    # else:
+    #     print("Ack not Received")
+    #     step(temp1, temp2)
     
-def step_loop(resolution="fine"): # , ifinit):
+def step_loop(resolution, angleNow, prev_angle): # , ifinit):
     '''ties scanning range to certain range 
         emergencystop 
         stop and go back few step'''
@@ -51,39 +52,38 @@ def step_loop(resolution="fine"): # , ifinit):
         resolution = 1  # == 1,8 degree
     if resolution == "coarse":
         resolution = 5  # == 9 degree
-    global prev_angle
-    global angleNow
+
+    global delta
     if(angleNow >= 125):
         delta = resolution*-1
-        print(resolution)
-        print(delta)
         print("right bound")
         # resolution should < 0
     elif(angleNow <= 75):
         print("left bound")
         delta = resolution * 1
         # resolution should > 0
-    else:
-        if((prev_angle-angleNow) > 0):
+    elif((prev_angle-angleNow) > 0):
             delta = -1
-        if((prev_angle-angleNow) < 0):
+    elif((prev_angle-angleNow) < 0):
             delta = 1
-    print(angleNow)
-    print("step " + str(angleNow + delta))
+    # print(prev_angle)
+    # print(angleNow)
+    # print(delta)
+    # print("step " + str(angleNow + delta))
     step(angleNow + delta)
     prev_angle = angleNow
     response = ''
     for i in range(3):
         response += SerialArduino.readline().decode('utf-8')
-    print('response: ' + str(response))
+    # print('response: ' + str(response))
     prefix = "AngleNow: "
     if prefix in response:
         lines = response.split('\n')
         for line in lines:
             if "AngleNow: " in line:
                 angleNow = int(line[len("AngleNow: "):])
-                print("angleNow saved: " + str(angleNow))
-    return angleNow
+                # print("angleNow saved: " + str(angleNow))
+    return angleNow, prev_angle
 
     # IsScanEdge = "Nan" 
     # # set resolution
@@ -118,7 +118,7 @@ def homing():
     response = ''
     for i in range(3):
         response += SerialArduino.readline().decode('utf-8')
-    print('response: ' + str(response))
+    # print('response: ' + str(response))
     # read Ack statement from arduino and try again if ack not recieved
     if "Ack: Homing" in response:
         print("Ack Recieved")
@@ -165,3 +165,5 @@ if __name__ == "__main__":
         step_loop()
         print("stepping")
     print("end")
+
+# lidar retry mechanism need to take account of how out of sync is it
