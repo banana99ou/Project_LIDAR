@@ -53,6 +53,7 @@ def step_loop(resolution="fine"): # , ifinit):
         resolution = 5  # == 9 degree
     global prev_angle
     global angleNow
+    delta = 1
     if(angleNow >= 125):
         delta = resolution*-1
         print(resolution)
