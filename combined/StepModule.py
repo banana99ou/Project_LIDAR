@@ -72,17 +72,18 @@ def step_loop(resolution, angleNow, prev_angle): # , ifinit):
     # print("step " + str(angleNow + delta))
     step(angleNow + delta)
     prev_angle = angleNow
-    response = ''
-    for i in range(3):
-        response += SerialArduino.readline().decode('utf-8')
-    # print('response: ' + str(response))
-    prefix = "AngleNow: "
-    if prefix in response:
-        lines = response.split('\n')
-        for line in lines:
-            if "AngleNow: " in line:
-                angleNow = int(line[len("AngleNow: "):])
-                # print("angleNow saved: " + str(angleNow))
+    angleNow = delta
+    # response = ''
+    # for i in range(3):
+    #     response += SerialArduino.readline().decode('utf-8')
+    # # print('response: ' + str(response))
+    # prefix = "AngleNow: "
+    # if prefix in response:
+    #     lines = response.split('\n')
+    #     for line in lines:
+    #         if "AngleNow: " in line:
+    #             angleNow = int(line[len("AngleNow: "):])
+    #             # print("angleNow saved: " + str(angleNow))
     return angleNow, prev_angle
 
     # IsScanEdge = "Nan" 
@@ -162,7 +163,7 @@ def read_serial():
 if __name__ == "__main__":
     homing()
     for i in range(200):
-        step_loop()
+        angleNow, prev_angle = StepModule.step_loop(resolution="fine", angleNow=angleNow, prev_angle=prev_angle)
         print("stepping")
     print("end")
 
