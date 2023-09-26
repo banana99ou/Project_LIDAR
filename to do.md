@@ -22,3 +22,9 @@
 
 # idea:
 # find milestone management program/website
+
+
+
+- [x] Write the press release
+- [ ] Update the website
+- [ ] Contact the media

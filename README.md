@@ -8,5 +8,6 @@
 ## combin all system
 
 * _combined_ -> mesh up all subsystem
-> StepModule.py -> drive stepper motor
-
+>* StepModule.py -> drive stepper motor
+>* test_1.py -> test combined system
+>* test_2.py -> test kinks in motor driver system
