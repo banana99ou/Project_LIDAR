@@ -20,6 +20,9 @@
 - [ ]  ㄴsome other way
 - [x] ~~get stepper and lidar working together - kinda~~
 - [ ] data processing
+- [ ] add picture of lidar to readme.md
+- [ ] make sure that everyone can know what this project is
+- [ ] add link to cad files
 
 # idea:
 - [ ] find milestone management program/website
