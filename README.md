@@ -1,3 +1,7 @@
+# Project Description
+This project makes 3d LIDAR using rpilidar A1M8 slamtec
+
+
 # Description of each files
 
 ## establish each subsystem

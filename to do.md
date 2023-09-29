@@ -1,3 +1,4 @@
+[Markdown Cheat Sheet](https://www.markdownguide.org/cheat-sheet/)
 # issues:
 * .stop() sends stop byte to lidar so chekc what stop byte should be in doc
 * also look for discriptor length
@@ -19,6 +20,9 @@
 - [ ]  ㄴsome other way
 - [x] ~~get stepper and lidar working together - kinda~~
 - [ ] data processing
+- [ ] add picture of lidar to readme.md
+- [ ] make sure that everyone can know what this project is
+- [ ] add link to cad files
 
 # idea:
 - [ ] find milestone management program/website
