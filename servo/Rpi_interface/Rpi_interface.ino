@@ -103,7 +103,7 @@ void loop() {
   }
   serialEvent();
   if(stringComplete) {
-    Serial.println(inputString);
+    
     if(inputString.startsWith("Step")) {
       Serial.println("Ack: Step");
       int amount = inputString.substring(5).toInt();
